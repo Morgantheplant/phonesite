@@ -24,7 +24,7 @@ function Slider(node){
 
         child.setSizeMode(1,1,1)
             .setAbsoluteSize(8,15)
-            .setPosition(i*8,0,0)
+            .setPosition(i*9,0,0)
 
        this.letters[i].opacity.set(0.4);
     };
@@ -44,7 +44,8 @@ function Letter(node, options){
         content: options.text,
         properties:{
             'text-align':'center',
-            'color':'white'
+            'color':'white',
+            'font-size':'18px'
             //'background':'black'
         }
     });
