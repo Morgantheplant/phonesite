@@ -4,8 +4,8 @@ var FamousEngine = require('famous/core/FamousEngine');
 
 function DateAndTime(node, options){
     //scene and nodes
-    this.node = node
-    this.time = this.node.addChild();
+    this.dateAndTimeNode = node
+    this.time = this.dateAndTimeNode.addChild();
     this.date = this.time.addChild();
     
     this.dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -42,7 +42,7 @@ function _addElements(){
 
 
 function _positionElements(){
-    this.node.setSizeMode(1,1,1)
+    this.dateAndTimeNode.setSizeMode(1,1,1)
         .setAbsoluteSize(250,100)
     
     this.time.setSizeMode(1,1,1)

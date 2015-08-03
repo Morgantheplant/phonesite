@@ -8,6 +8,7 @@ var Slider = require('./Slider')
 var NumberKey = require('./NumberKey');
 var NumberPad = require('./NumberPad');
 
+
 function WebSite(){
     this.scene = FamousEngine.createScene();
     this.root = this.scene.addChild();
@@ -15,7 +16,9 @@ function WebSite(){
     this.draggerNode = this.root.addChild();
     this.draggerNode.el = new DOMElement(this.draggerNode)
     this.draggerNode.pos = new Position(this.draggerNode)
-   
+    
+    this.padisShowing = false;
+
     this.timeNode = this.draggerNode.addChild();
     new DateAndTime(this.timeNode);
 
@@ -29,13 +32,14 @@ function WebSite(){
     new Reception(this.receptionNode);
     
     this.cameraNode = this.root.addChild();
+    //store pointer for "cancel" event
+    this.draggerNode.camera =  this.cameraNode
     this.cameraNode.pos = new Position(this.cameraNode);
     new Camera(this.cameraNode)
 
     this.numbers = this.draggerNode.addChild()
     new NumberPad(this.numbers)
-
-
+   
     FamousEngine.init();
 
     _positionChildren.call(this)
@@ -59,7 +63,7 @@ function _positionChildren(){
 
     this.sliderNode
         .setSizeMode(1,1)
-        .setAbsoluteSize(135,50)
+        .setAbsoluteSize(170,50)
         .setMountPoint(0.5,0.97)
         .setAlign(0.5,1)
 
@@ -81,8 +85,18 @@ function _positionChildren(){
         .setMountPoint(1,1)
 
     this.numbers
-        .setAlign(-1.25,0.5)
+        .setAlign(-1.5,0.5)
+        .setMountPoint(0.5,0.5)
     
+    this.root.addComponent({
+        onSizeChange: function(x,y){
+            this.screenSize = [x,y]
+
+            if(this.padisShowing){
+                layoutPad.call(this)
+            }
+        }.bind(this)
+    })
 
 }
 
@@ -95,6 +109,7 @@ function _bindEvents(){
 }
 
 function drag(e){
+    var centerScreen = (this.screenSize[0])//+(this.screenSize[0]/2)) - (this.screenSize[0]/2)
     var currentPos = this.draggerNode.pos.getX()
     var newPosX = currentPos + e.centerDelta.x
     this.draggerNode.pos.setX(newPosX)
@@ -104,14 +119,18 @@ function drag(e){
         this.cameraNode.pos.setX(0,{duration:900, curve:'outElastic'})
     }
     
-    
-    console.log('hello',e.centerDelta.x>=175, e.centerDelta.x)
     if(newPosX>=175){
-        console.log('hello')
-        this.draggerNode.pos.setX(365,{duration:900, curve:'outElastic'})
+        this.padisShowing = true;
+        this.draggerNode.pos.setX(centerScreen,{duration:900, curve:'outElastic'})
     }
 
 
+}
+
+function layoutPad(){
+
+    var centerScreen = (this.screenSize[0])
+    this.draggerNode.pos.setX(centerScreen)
 }
 
 

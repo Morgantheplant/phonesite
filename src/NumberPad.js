@@ -1,10 +1,12 @@
 var NumberKey = require('./NumberKey');
 var Position = require('famous/components/Position')
 var DOMElement = require('famous/dom-renderables/DOMElement');
+var Dot = require('./Dot');
+var Transitionable = require('famous/transitions/Transitionable');
 
 function NumberPad(node){
     
-    this.mainNumberNode = node
+    this.numberPadNode = node
 
     var numSize = 75;
     var padding = 10;
@@ -13,13 +15,13 @@ function NumberPad(node){
     [1,''],
     [2,'ABC'],
     [3,'DEF'],
-    [4,'GHI'], //split
+    [4,'GHI'], 
     [5,'JKL'],
     [6,'MNO'],
-    [7,'PQRS'], //split
+    [7,'PQRS'], 
     [8,'TUV'],
     [9,'WXYZ'],
-    [0,''] //bottom center
+    [0,''] 
     ]
     
     this.numberNodes = {};
@@ -27,7 +29,7 @@ function NumberPad(node){
 
     var padDimensions = layoutPad(numSize, padding, columns, len)
     
-    this.mainNumberNode
+    this.numberPadNode
         .setSizeMode(1,1,1)
         .setAbsoluteSize(padDimensions[0],padDimensions[1])
         .setAlign(0.5,0.5)
@@ -35,7 +37,7 @@ function NumberPad(node){
     
 
     for (var i = 0; i < len; i++){
-        var numNode = this.mainNumberNode.addChild()
+        var numNode = this.numberPadNode.addChild()
         
         var numKey = new NumberKey(numNode, {
             number: numbers[i][0],
@@ -56,6 +58,8 @@ function NumberPad(node){
 
     }
 
+    createDots.call(this)
+    createText.call(this)
 
 }
 
@@ -75,8 +79,108 @@ function createPosition(index, padding, columns, numSize){
 function layoutPad(numSize, padding, columns, len){
    var width = padding + (numSize + padding) * columns
    var height = padding + (Math.ceil(len/ columns))*(padding+numSize)
-   
+   console.log(width)
    return [width, height]
+}
+
+function createDots(){
+        // Node that postions the Dots as a unit
+    this.numberPadNode.dots = this.numberPadNode.addChild()
+        .setAlign(0.5,0)
+        .setPosition(0,-35)
+        .setMountPoint(0.5,0)
+        .setSizeMode(1,1,1)
+        .setAbsoluteSize(108,10)
+    var dots = this.numberPadNode.dots
+
+    //build and position the dots
+    for (var i = 0; i < 4; i++){
+        
+        var dotsPadding = 20;
+        var dotsSize = [12,12];
+
+        dots[i] = dots.addChild()
+        dots[i].setPosition((i*dotsSize[0])+(i*dotsPadding),0,0)
+        
+        dots[i].instance = new Dot(dots[i], {
+            size: dotsSize,
+            color: 'rgba(200, 191, 217, .7)'
+        })
+    }
+}
+
+function createText(){
+    this.numberPadTextNode = this.numberPadNode.addChild()
+        .setPosition(0,-70,-5)
+        .setAlign(0.5,0)
+        .setMountPoint(0.5,0)
+        .setSizeMode(1,1,1)
+        .setAbsoluteSize(176,12)
+
+    new DOMElement(this.numberPadTextNode, {
+        content: 'Enter any Four Numbers',
+        properties:{
+         //   background:'grey',
+            color: 'white'
+        }
+    })
+
+    this.emergencyNode = this.numberPadNode.addChild()
+        .setPosition(2,55,0)
+        .setAlign(0,1)
+        .setSizeMode(1,1,1)
+        .setAbsoluteSize(80,12)
+
+    this.emergencyNode.onReceive = function(e){
+        alert("Mayday!")
+    }
+
+    this.emergencyNode.addUIEvent('mousedown')
+    this.emergencyNode.addUIEvent('touchstart')
+
+    new DOMElement(this.emergencyNode, {
+        content: 'Emergency',
+        properties:{
+            color: 'white',
+            background:'blue',
+            cursor: 'pointer'
+        }
+    })
+
+    this.cancelOrDeleteNode = this.numberPadNode.addChild()
+        .setPosition(-20,55,0)
+        .setAlign(1,1)
+        .setMountPoint(1,0)
+        .setSizeMode(1,1,1)
+        .setAbsoluteSize(50,12)
+
+    new DOMElement(this.cancelOrDeleteNode, {
+        content: 'Cancel',
+        properties:{
+            color: 'white',
+            background:'blue',
+            cursor: 'pointer'
+        }
+    })
+
+    this.cancelOrDeleteNode.addUIEvent('mousedown')
+    this.cancelOrDeleteNode.addUIEvent('touchstart')
+
+    this.cancelOrDeleteNode.onReceive = function(){
+       var draggerNode =  this.numberPadNode.getParent();
+      
+      draggerNode.pos.setX(0,{duration:900}) //, {duration:900, curve:'outElastic'}, function(){
+     // })
+      draggerNode.camera.pos.set(0,0,0, {duration:900, curve:'outElastic'})
+    
+      console.log('got to here')
+     setTimeout(function(){
+        console.log(draggerNode.pos.getX(), 'here')
+      },2000)
+
+    }.bind(this)
+
+
 }
 
 

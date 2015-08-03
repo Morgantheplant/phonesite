@@ -10,10 +10,11 @@ function NumberKey(node, options){
     var bgColor = options.bgColor || 'rgb(215, 206, 232)';
     var number = options.number;
     var text = options.text;
+    this.passwordDotsCounter = 0;
 
     // scene
-    this.node = node
-    this.elementNode = this.node.addChild();
+    this.numberKeyNode = node
+    this.elementNode = this.numberKeyNode.addChild();
     
     //create elements
     _createBgElements.call(this, bgColor)
@@ -47,7 +48,7 @@ function _createElement(number, text){
 
 function _createBgElements(bgColor){
     
-    this.bg = new DOMElement(this.node,{
+    this.bg = new DOMElement(this.numberKeyNode,{
         properties: {
             color: 'red',
             borderRadius: '50%',
@@ -57,11 +58,11 @@ function _createBgElements(bgColor){
         }
     })
 
-    this.node.addUIEvent('touchstart');
-    this.node.addUIEvent('mousedown');
-    this.node.addUIEvent('touchend');
-    this.node.addUIEvent('mouseup');
-    this.node.addUIEvent('mouseleave');
+    this.numberKeyNode.addUIEvent('touchstart');
+    this.numberKeyNode.addUIEvent('mousedown');
+    this.numberKeyNode.addUIEvent('touchend');
+    this.numberKeyNode.addUIEvent('mouseup');
+    this.numberKeyNode.addUIEvent('mouseleave');
     
     this.bgOpacity = new Transitionable(.9)
 
@@ -69,20 +70,20 @@ function _createBgElements(bgColor){
         onReceive: function(e){
             
             if(e==='touchstart'||e==='mousedown'){
-               this.bg.setProperty('background-color', 'rgba(200, 191, 217, .9)')
-               this.bgOpacity.set(.9)
+                this.markTheDot()
+                this.bg.setProperty('background-color', 'rgba(200, 191, 217, .9)')
+                this.bgOpacity.set(.9)
             }
 
             if(e==='touchend'||e==='mouseup'){
-               this.bgOpacity.set(0, {duration:350})
-
-              FamousEngine.requestUpdate(buttonFade)
+                this.bgOpacity.set(0, {duration:350})
+                
+                FamousEngine.requestUpdate(buttonFade)
             }
 
         }.bind(this),
         onUpdate: function(){
             var op = this.bgOpacity.get()
-            console.log(op)
             if(op){
                 this.bg.setProperty('background-color','rgba(200, 191, 217, '+op+')' )
                 FamousEngine.requestUpdateOnNextTick(buttonFade)
@@ -91,14 +92,34 @@ function _createBgElements(bgColor){
         }.bind(this)
     }
 
-    this.node.addComponent(buttonFade)
+    this.numberKeyNode.addComponent(buttonFade)
+
+}
+
+var counter = 0;
+
+NumberKey.prototype.markTheDot = function(){
+    //this.passwordDotsCounter++
+   // var index = 4 - this.passwordDotsCounter--;
+
+    var index = counter;
+    var dotsHash = this.numberKeyNode.getParent().dots;
+    if(dotsHash[index]){
+        dotsHash[index].instance.on();
+    }
+    if(counter === 4){
+        //this.numberKeyNode.getParent().triggerIcons()
+    }
+
+    counter++
+
 
 }
 
 
 function _layoutElements(btnSize){
     
-    this.node
+    this.numberKeyNode
         .setSizeMode(1,1,1)
         .setAbsoluteSize(75, 75)
         // .setAlign(0.5,0.5)
