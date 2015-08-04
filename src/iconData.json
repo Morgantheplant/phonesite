@@ -6,7 +6,7 @@
   "vert": 20,
   "initZ": 2000,
   "borderRadius": "10px",
-  "colors":["red", "green", "blue"],
+  "colors":["red", "orange", "orange"],
   "content":[],
   "iconText":["About", "GitHub", "LinkedIn", "Projects"],
   "classes":["About", "GitHub", "LinkedIn", "Projects"]

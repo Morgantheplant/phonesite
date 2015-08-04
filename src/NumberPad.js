@@ -10,6 +10,7 @@ var Icons = require('./Icons')
 function NumberPad(node){
     
     this.numberPadNode = node;
+    this.numberPadNode.markTheDot = dotMarker.bind(this)
     //initial states
     var numSize = 75;
     var padding = 10;
@@ -121,11 +122,11 @@ function createEvents(){
     this.numberPadNode.addComponent({
         onReceive: function(e, payload) {
             // console.log(e)
-            if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
-                if(e==='click'){
-                    this.markTheDot()
-                }
-            }
+            // if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
+            //     if(e==='click'){
+            //         this.markTheDot()
+            //     }
+            // }
      
             if(payload.node === this.emergencyNode){
                 alert('MayDay!')
@@ -140,7 +141,11 @@ function createEvents(){
 
 
 
-NumberPad.prototype.markTheDot = function() {
+NumberPad.prototype.markTheDot = dotMarker;
+
+
+
+function dotMarker() {
     var index = this.dotsCounter;
     var dotsHash = this.numberPadNode.dots;
 
@@ -151,10 +156,8 @@ NumberPad.prototype.markTheDot = function() {
 
     if(index === 3){
         FamousEngine.getClock().setTimeout(function(){
-            
             new Icons(this.numberPadNode, iconData)
             removeChildren.call(this)
-            //changeToIcons.call(this)
         }.bind(this), 500);
     }
     

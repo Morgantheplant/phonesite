@@ -52,29 +52,32 @@ function _createBgElements(bgColor){
             cursor:'pointer'
         }
     })
+
+    this.gesture = new GestureHandler(this.numberKeyNode)
+    this.gesture.on('tap', function(e){      
+                this.bg.setProperty('background-color', 'rgba(200, 191, 217, .9)')
+                this.bgOpacity.set(.9)
+                this.numberKeyNode.getParent().markTheDot()
+                //.markTheDot()
+    }.bind(this))
+
     
-    this.numberKeyNode.addUIEvent('click');
-    this.numberKeyNode.addUIEvent('touchstart');
-    this.numberKeyNode.addUIEvent('mousedown');
-    this.numberKeyNode.addUIEvent('touchend');
-    this.numberKeyNode.addUIEvent('mouseup');
-    this.numberKeyNode.addUIEvent('mouseleave');
+    
+    // this.numberKeyNode.addUIEvent('click');
+    // this.numberKeyNode.addUIEvent('touchstart');
+    // this.numberKeyNode.addUIEvent('mousedown');
+    // this.numberKeyNode.addUIEvent('touchend');
+    // this.numberKeyNode.addUIEvent('mouseup');
+    // this.numberKeyNode.addUIEvent('mouseleave');
     
     this.bgOpacity = new Transitionable(.9)
 
     this.buttonFade = {
         onReceive: function(e){
-            
-            if(e==='click'){
-                this.bg.setProperty('background-color', 'rgba(200, 191, 217, .9)')
-                this.bgOpacity.set(.9)
-            }
-
-            if(e==='touchend'||e==='mouseup'){
+            if(e==='mouseup'||e==='touchend'){
                 this.bgOpacity.set(0, {duration:350})            
                 FamousEngine.requestUpdate(this.buttonFade)
             }
-
         }.bind(this),
         onUpdate: function(){
             var op = this.bgOpacity.get()
@@ -107,18 +110,18 @@ function _layoutElements(btnSize){
 
 }
 
-NumberKey.prototype.changeToIcon = function(options){
-    this.numberKeyNode.removeComponent(this.buttonFade)
-    var color = options.color || randomColor();
-    var iconText = options.iconText || 'icon'
-    this.bg.setProperty('background', color)
-    this.bg.setProperty('border-radius', '10px')
-    this.bg.setProperty('border', 'none')
-    this.bg.setProperty('box-shadow', '0px 0px 5px black')
-    this.element.setContent(iconText)
-    this.element.setProperty('font-size', '10px')
-    this.elementNode.setPosition(0,65)
-}
+// NumberKey.prototype.changeToIcon = function(options){
+//     this.numberKeyNode.removeComponent(this.buttonFade)
+//     var color = options.color || randomColor();
+//     var iconText = options.iconText || 'icon'
+//     this.bg.setProperty('background', color)
+//     this.bg.setProperty('border-radius', '10px')
+//     this.bg.setProperty('border', 'none')
+//     this.bg.setProperty('box-shadow', '0px 0px 5px black')
+//     this.element.setContent(iconText)
+//     this.element.setProperty('font-size', '10px')
+//     this.elementNode.setPosition(0,65)
+// }
 
 function randomColor(){
     return 'rgb('+Math.floor(Math.random()*250)+','+Math.floor(Math.random()*250)+','+Math.floor(Math.random()*250)+')'
