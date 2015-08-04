@@ -23,14 +23,12 @@ function NumberKey(node, options){
     //positoin elements
     _layoutElements.call(this, btnSize)
 
-
 }
 
 
 
 
-function _createElement(number, text){
-    
+function _createElement(number, text){   
     var text = '<span class="number">' + number + '</span><br /><span class="text">'+text+'</span>'
     this.element = new DOMElement(this.elementNode,{
         content: text,
@@ -46,8 +44,7 @@ function _createElement(number, text){
 
 }
 
-function _createBgElements(bgColor){
-    
+function _createBgElements(bgColor){   
     this.bg = new DOMElement(this.numberKeyNode,{
         properties: {
             color: 'red',
@@ -70,14 +67,12 @@ function _createBgElements(bgColor){
         onReceive: function(e){
             
             if(e==='touchstart'||e==='mousedown'){
-                this.markTheDot()
                 this.bg.setProperty('background-color', 'rgba(200, 191, 217, .9)')
                 this.bgOpacity.set(.9)
             }
 
             if(e==='touchend'||e==='mouseup'){
-                this.bgOpacity.set(0, {duration:350})
-                
+                this.bgOpacity.set(0, {duration:350})            
                 FamousEngine.requestUpdate(buttonFade)
             }
 
@@ -96,25 +91,6 @@ function _createBgElements(bgColor){
 
 }
 
-var counter = 0;
-
-NumberKey.prototype.markTheDot = function(){
-    //this.passwordDotsCounter++
-   // var index = 4 - this.passwordDotsCounter--;
-
-    var index = counter;
-    var dotsHash = this.numberKeyNode.getParent().dots;
-    if(dotsHash[index]){
-        dotsHash[index].instance.on();
-    }
-    if(counter === 4){
-        //this.numberKeyNode.getParent().triggerIcons()
-    }
-
-    counter++
-
-
-}
 
 
 function _layoutElements(btnSize){
@@ -122,8 +98,6 @@ function _layoutElements(btnSize){
     this.numberKeyNode
         .setSizeMode(1,1,1)
         .setAbsoluteSize(75, 75)
-        // .setAlign(0.5,0.5)
-        // .setMountPoint(0.5,0.5)
 
     this.elementNode
         .setSizeMode(1,1,1)

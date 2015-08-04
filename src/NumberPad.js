@@ -6,8 +6,8 @@ var Transitionable = require('famous/transitions/Transitionable');
 
 function NumberPad(node){
     
-    this.numberPadNode = node
-
+    this.numberPadNode = node;
+    //initial states
     var numSize = 75;
     var padding = 10;
     var columns = 3;
@@ -60,6 +60,7 @@ function NumberPad(node){
 
     createDots.call(this)
     createText.call(this)
+    createEvents.call(this)
 
 }
 
@@ -84,7 +85,7 @@ function layoutPad(numSize, padding, columns, len){
 }
 
 function createDots(){
-        // Node that postions the Dots as a unit
+    // Node that postions the Dots as a unit
     this.numberPadNode.dots = this.numberPadNode.addChild()
         .setAlign(0.5,0)
         .setPosition(0,-35)
@@ -92,9 +93,10 @@ function createDots(){
         .setSizeMode(1,1,1)
         .setAbsoluteSize(108,10)
     var dots = this.numberPadNode.dots
-
+    this.dotsNumber = 4;
+    this.dotsCounter = 0;
     //build and position the dots
-    for (var i = 0; i < 4; i++){
+    for (var i = 0; i < this.dotsNumber; i++){
         
         var dotsPadding = 20;
         var dotsSize = [12,12];
@@ -109,7 +111,64 @@ function createDots(){
     }
 }
 
+function createEvents(){
+    this.numberPadNode.addComponent({
+        onReceive: function(e, payload) {
+            console.log(payload.node)
+
+            if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
+                if(e==='touchstart'|| e==='mousedown'){
+                    this.markTheDot()
+                }
+            }
+     
+            if(payload.node === this.emergencyNode){
+                alert('MayDay!')
+            }
+
+        }.bind(this)
+    });
+   
+}
+
+
+
+NumberPad.prototype.markTheDot = function() {
+    var index = this.dotsCounter;
+    var dotsHash = this.numberPadNode.dots;
+
+    if(dotsHash[index]){
+        dotsHash[index].instance.on();
+        changeCancelToRemove.call(this)
+    }
+
+    if(index === 4){
+    
+    }
+    
+    this.dotsCounter++;
+}
+
+NumberPad.prototype.removeTheDot = function() {
+    if(this.dotsCounter>0){
+        this.dotsCounter--;
+    }
+    var index = this.dotsCounter;
+    var dotsHash = this.numberPadNode.dots;
+  
+    if(dotsHash[index]){
+        dotsHash[index].instance.off();
+    }
+
+    if(index===0){
+        changeRemoveToCancel.call(this)
+    }
+
+}
+
 function createText(){
+    var padding = 10;
+
     this.numberPadTextNode = this.numberPadNode.addChild()
         .setPosition(0,-70,-5)
         .setAlign(0.5,0)
@@ -120,20 +179,17 @@ function createText(){
     new DOMElement(this.numberPadTextNode, {
         content: 'Enter any Four Numbers',
         properties:{
-         //   background:'grey',
             color: 'white'
         }
     })
 
     this.emergencyNode = this.numberPadNode.addChild()
-        .setPosition(2,55,0)
+        .setPosition(padding,55,0)
         .setAlign(0,1)
         .setSizeMode(1,1,1)
         .setAbsoluteSize(80,12)
 
-    this.emergencyNode.onReceive = function(e){
-        alert("Mayday!")
-    }
+    
 
     this.emergencyNode.addUIEvent('mousedown')
     this.emergencyNode.addUIEvent('touchstart')
@@ -148,13 +204,15 @@ function createText(){
     })
 
     this.cancelOrDeleteNode = this.numberPadNode.addChild()
-        .setPosition(-20,55,0)
+        .setPosition(-padding,55,0)
         .setAlign(1,1)
         .setMountPoint(1,0)
         .setSizeMode(1,1,1)
         .setAbsoluteSize(50,12)
 
-    new DOMElement(this.cancelOrDeleteNode, {
+    this.cancelOrDeleteNode.cancel = true;
+
+    this.cancelOrDeleteNode.el = new DOMElement(this.cancelOrDeleteNode, {
         content: 'Cancel',
         properties:{
             color: 'white',
@@ -166,21 +224,21 @@ function createText(){
     this.cancelOrDeleteNode.addUIEvent('mousedown')
     this.cancelOrDeleteNode.addUIEvent('touchstart')
 
-    this.cancelOrDeleteNode.onReceive = function(){
-       var draggerNode =  this.numberPadNode.getParent();
-      
-      draggerNode.pos.setX(0,{duration:900}) //, {duration:900, curve:'outElastic'}, function(){
-     // })
-      draggerNode.camera.pos.set(0,0,0, {duration:900, curve:'outElastic'})
-    
-      console.log('got to here')
-     setTimeout(function(){
-        console.log(draggerNode.pos.getX(), 'here')
-      },2000)
+}
 
-    }.bind(this)
+function changeCancelToRemove(){
+    this.cancelOrDeleteNode.cancel = false;
+    this.cancelOrDeleteNode.remove = true;
+    this.cancelOrDeleteNode.setAbsoluteSize('60')
+    this.cancelOrDeleteNode.el.setContent('Remove')
 
+}
 
+function changeRemoveToCancel(){
+    this.cancelOrDeleteNode.cancel = true;
+    this.cancelOrDeleteNode.remove = false;
+    this.cancelOrDeleteNode.setAbsoluteSize('50')
+    this.cancelOrDeleteNode.el.setContent('Cancel')
 }
 
 

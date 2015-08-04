@@ -7,7 +7,7 @@ var DateAndTime = require('./DateAndTime');
 var Slider = require('./Slider')
 var NumberKey = require('./NumberKey');
 var NumberPad = require('./NumberPad');
-
+var Transitionable = require('famous/transitions/Transitionable')
 
 function WebSite(){
     this.scene = FamousEngine.createScene();
@@ -32,13 +32,11 @@ function WebSite(){
     new Reception(this.receptionNode);
     
     this.cameraNode = this.root.addChild();
-    //store pointer for "cancel" event
-    this.draggerNode.camera =  this.cameraNode
     this.cameraNode.pos = new Position(this.cameraNode);
     new Camera(this.cameraNode)
 
     this.numbers = this.draggerNode.addChild()
-    new NumberPad(this.numbers)
+    this.numberPad = new NumberPad(this.numbers)
    
     FamousEngine.init();
 
@@ -105,18 +103,55 @@ function _bindEvents(){
     var gesture = new GestureHandler(this.draggerNode, [
         {event:'drag', callback: drag.bind(this)}
     ]);
+    
+    this.draggerNode.addComponent({
+        onReceive: function(e, payload){
+            if(payload.node.cancel){
+                this.padisShowing = false;
+                // inner transitionable is not working
+                // this is a hack to update the internal state
+                var t = new Transitionable(this.screenSize[0])
+                var timer = FamousEngine.getClock().setInterval(function(){
+                    this.draggerNode.pos.setX(t.get())
+                      this.cameraNode.pos.setX(t.get())
+            
+                }.bind(this), 16)
+
+               
+                t.set(0,{duration:700, curve:lessElastic}, function(){
+                    FamousEngine.getClock().clearTimer(timer)
+                    console.log('done')
+                });
+                // Not sure why this method call isn't working
+                // could be a bug?
+               //centerDragger.call(this)
+
+               // this works, but adding a duration doesn't:
+               //this.draggerNode.pos.setX(0)
+                
+            }
+
+            if(payload.node.remove){
+                this.numberPad.removeTheDot();
+            }
+
+        }.bind(this)
+    })
+
 
 }
 
+
+
+
 function drag(e){
-    var centerScreen = (this.screenSize[0])//+(this.screenSize[0]/2)) - (this.screenSize[0]/2)
+    var centerScreen = this.screenSize[0]
     var currentPos = this.draggerNode.pos.getX()
     var newPosX = currentPos + e.centerDelta.x
     this.draggerNode.pos.setX(newPosX)
     this.cameraNode.pos.setX(newPosX)
     if(e.status==='end'&&newPosX<175){
-        this.draggerNode.pos.setX(0,{duration:900, curve:'outElastic'})
-        this.cameraNode.pos.setX(0,{duration:900, curve:'outElastic'})
+        centerDragger.call(this)
     }
     
     if(newPosX>=175){
@@ -124,11 +159,14 @@ function drag(e){
         this.draggerNode.pos.setX(centerScreen,{duration:900, curve:'outElastic'})
     }
 
+}
 
+function centerDragger(){
+    this.draggerNode.pos.setX(0,{duration:900, curve:'outElastic'})
+    this.cameraNode.pos.setX(0,{duration:900, curve:'outElastic'})
 }
 
 function layoutPad(){
-
     var centerScreen = (this.screenSize[0])
     this.draggerNode.pos.setX(centerScreen)
 }
@@ -163,4 +201,11 @@ function Camera(node){
             'color':'white'
         }
     })     
+}
+
+function lessElastic(t) {
+    var s=4.70158;var p=0;var a=1.0;
+    if (t===0) return 0.0;  if (t===1) return 1.0;  if (!p) p=.3;
+    s = p/(2*Math.PI) * Math.asin(1.0/a);
+    return a*Math.pow(2,-15*t) * Math.sin((t-s)*(2*Math.PI)/p) + 1.0;
 }

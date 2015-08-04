@@ -20,4 +20,8 @@ Dot.prototype.on = function(){
     this.el.setProperty('background', 'rgba(200, 191, 217, .9)')
 }
 
+Dot.prototype.off = function(){
+    this.el.setProperty('background', 'rgba(200, 191, 217, 0)')
+}
+
 module.exports = Dot
