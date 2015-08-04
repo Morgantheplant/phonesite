@@ -1,0 +1,13 @@
+{
+  "len": 10,
+  "numSize":50,
+  "padding": 20,
+  "columns": 4,
+  "vert": 20,
+  "initZ": 2000,
+  "borderRadius": "10px",
+  "colors":["red", "green", "blue"],
+  "content":[],
+  "iconText":["About", "GitHub", "LinkedIn", "Projects"],
+  "classes":["About", "GitHub", "LinkedIn", "Projects"]
+}

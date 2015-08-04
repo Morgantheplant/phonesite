@@ -52,7 +52,8 @@ function _createBgElements(bgColor){
             cursor:'pointer'
         }
     })
-
+    
+    this.numberKeyNode.addUIEvent('click');
     this.numberKeyNode.addUIEvent('touchstart');
     this.numberKeyNode.addUIEvent('mousedown');
     this.numberKeyNode.addUIEvent('touchend');
@@ -64,7 +65,7 @@ function _createBgElements(bgColor){
     this.buttonFade = {
         onReceive: function(e){
             
-            if(e==='touchstart'||e==='mousedown'){
+            if(e==='click'){
                 this.bg.setProperty('background-color', 'rgba(200, 191, 217, .9)')
                 this.bgOpacity.set(.9)
             }
@@ -117,13 +118,6 @@ NumberKey.prototype.changeToIcon = function(options){
     this.element.setContent(iconText)
     this.element.setProperty('font-size', '10px')
     this.elementNode.setPosition(0,65)
-    // this.buttonFade = { 
-    //     onReceive: function(){
-    //         console.log('got it')
-    //     }
-    // }
-    // this.numberKeyNode.addComponent(this.buttonFade)
-
 }
 
 function randomColor(){

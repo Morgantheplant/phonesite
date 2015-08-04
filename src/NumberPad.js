@@ -4,6 +4,8 @@ var DOMElement = require('famous/dom-renderables/DOMElement');
 var Dot = require('./Dot');
 var Transitionable = require('famous/transitions/Transitionable');
 var FamousEngine = require('famous/core/FamousEngine');
+var iconData = require('./iconData')
+var Icons = require('./Icons')
 
 function NumberPad(node){
     
@@ -118,8 +120,9 @@ function createDots(){
 function createEvents(){
     this.numberPadNode.addComponent({
         onReceive: function(e, payload) {
+            // console.log(e)
             if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
-                if(e==='touchstart'|| e==='mousedown'){
+                if(e==='click'){
                     this.markTheDot()
                 }
             }
@@ -130,6 +133,8 @@ function createEvents(){
 
         }.bind(this)
     });
+
+    // this.gesture = new GestureHandler()
    
 }
 
@@ -145,7 +150,12 @@ NumberPad.prototype.markTheDot = function() {
     }
 
     if(index === 3){
-       changeToIcons.call(this)
+        FamousEngine.getClock().setTimeout(function(){
+            
+            new Icons(this.numberPadNode, iconData)
+            removeChildren.call(this)
+            //changeToIcons.call(this)
+        }.bind(this), 500);
     }
     
     this.dotsCounter++;
@@ -241,46 +251,83 @@ function changeRemoveToCancel(){
     this.cancelOrDeleteNode.el.setContent('Cancel')
 }
 
-function changeToIcons(){
-    var numSize = 45;
-    var padding = 60;
-    var columns = 4;
-    var vert = 45;
-    var len = 10
-    //todo: fix this
-    //flag to remove centered 9 
-    this.icons = true;
-
-    for (var i = 0; i < 10; i++) {
-        var xy = createPosition.call(this, i, padding, columns, numSize, vert)
-        this.numberNodes[i].numKey.changeToIcon({})
-        this.numberNodes[i].position.set(xy[0],xy[1],1000)
-       
-        // //  console.log(this.numberNodes[i].position.getZ())
-        //  FamousEngine.getClock().setTimeout(function(i, xy){
-            this.numberNodes[i].position.set(xy[0],xy[1],0,{ duration:1000, curve: 'easeIn' });
-
-         //  console.log('morgan plant')
-         // }.bind(this, i, xy), 1000)
-         
-        
-        
-
-    }
-
-    var newPadSize = layoutPad(numSize, padding, columns, len);
-    this.numberPadNode.setAbsoluteSize(newPadSize[0],newPadSize[1])
-        .setAlign(-1.5,0)
-        .setMountPoint(0.5,0)
+function removeChildren(){
+    this.cancelOrDeleteNode.setOpacity(0)
+    this.cancelOrDeleteNode.setOpacity(0)
+    this.numberPadTextNode.setOpacity(0)
+    this.emergencyNode.setOpacity(0)
+    this.numberPadNode.dots.setOpacity(0)
     
+    // this.numberPadNode.removeChild(this.cancelOrDeleteNode)
+    // this.numberPadNode.removeChild(this.numberPadTextNode)
+    // this.numberPadNode.removeChild(this.emergencyNode)
     // this.numberPadNode.removeChild(this.numberPadNode.dots)
-     this.numberPadNode.removeChild(this.cancelOrDeleteNode)
-     this.numberPadNode.removeChild(this.numberPadTextNode)
-     this.numberPadNode.removeChild(this.emergencyNode)
-    
-    console.log(this.numberPadNode.getAlign())
+    for (var i = 0; i < 10; i++) {
+        this.numberNodes[i].node.setOpacity(0)
+       // this.numberPadNode.removeChild(this.numberNodes[i].node)
+    };
 
+
+    this.numberPadNode.removeChild(this.cancelOrDeleteNode)
+    this.numberPadNode.removeChild(this.numberPadTextNode)
+    this.numberPadNode.removeChild(this.emergencyNode)
+    this.numberPadNode.removeChild(this.numberPadNode.dots)
+    for (var i = 0; i < 10; i++) {
+       // this.numberNodes[i].node.setOpacity(0)
+       this.numberPadNode.removeChild(this.numberNodes[i].node)
+    };
 }
+
+// function changeToIcons(){
+//     var numSize = 50;
+//     var padding = 20;
+//     var columns = 4;
+//     var vert = 20;
+//     var len = 10
+//     //todo: fix this
+//     //flag to remove centered 9 
+//     this.icons = true;
+
+//     for (var i = 0; i < 10; i++) {
+//         this.numberNodes[i].node.setOpacity(0)
+//         var xyz = iconPositions(i, padding, columns, numSize, 2000, vert, len)
+//         this.numberNodes[i].position.set(xyz[0],xyz[1],xyz[2])
+//         this.numberNodes[i].numKey.numberKeyNode.setAbsoluteSize(numSize, numSize)
+//         this.numberNodes[i].numKey.changeToIcon({})
+//         this.numberNodes[i].node.setOpacity(1)
+//         this.numberNodes[i].position.set(xyz[0],xyz[1],0,{ duration:4000, curve: 'easeIn' })
+
+//     }
+
+//     var newPadSize = layoutPad(numSize, padding, columns, len);
+//     this.numberPadNode.setAbsoluteSize(newPadSize[0],newPadSize[1])
+//         .setAlign(-1.5,0.05)
+//         .setMountPoint(0.5,0)
+    
+//      // this.numberPadNode.removeChild(this.cancelOrDeleteNode)
+//      // this.numberPadNode.removeChild(this.numberPadTextNode)
+//      // this.numberPadNode.removeChild(this.emergencyNode)
+    
+//     console.log(this.numberPadNode.getAlign())
+
+// }
+
+// function iconPositions(index, padding, columns, btnSizes, initZ, vert, len){
+//      var xPosition = padding + (index%columns) * (btnSizes + (padding))
+//      var yPosition = padding + (Math.floor(index / columns))* (vert+btnSizes) 
+//      var zPosition;
+//      if(index%columns===columns-1||index%columns===0){
+//         zPosition = initZ*400
+//      }
+//      if(index%columns < columns-1 && index%columns > 0){
+//         zPosition = initZ*150
+//         if(Math.ceil(index / columns)===1||Math.ceil(index / columns)===Math.ceil(len.length/columns)){
+//           zPosition += initZ*150
+//         }
+//      }
+              
+//     return [xPosition, yPosition, zPosition]
+// }
 
 
 module.exports = NumberPad;

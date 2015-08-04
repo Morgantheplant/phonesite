@@ -13,8 +13,7 @@ var Camera = require('famous/components/Camera');
 function WebSite(){
     this.scene = FamousEngine.createScene();
     this.root = this.scene.addChild();
-    new Camera(this.root).setDepth(1000)
-    console.log('hello')
+    new Camera(this.root).setDepth(100)
 
     this.draggerNode = this.root.addChild();
     this.draggerNode.el = new DOMElement(this.draggerNode)
