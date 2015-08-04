@@ -3,6 +3,7 @@ var Position = require('famous/components/Position')
 var DOMElement = require('famous/dom-renderables/DOMElement');
 var Dot = require('./Dot');
 var Transitionable = require('famous/transitions/Transitionable');
+var FamousEngine = require('famous/core/FamousEngine');
 
 function NumberPad(node){
     
@@ -45,7 +46,7 @@ function NumberPad(node){
             btnSize: 75
         })
 
-        var xyz = createPosition(i, padding, columns, numSize)
+        var xyz = createPosition.call(this, i, padding, columns, numSize)
     
         var pos = new Position(numNode).set(xyz[0],xyz[1])
 
@@ -64,12 +65,14 @@ function NumberPad(node){
 
 }
 
-function createPosition(index, padding, columns, numSize){
+//todo: fix this sloppy function
 
+function createPosition(index, padding, columns, numSize, vertPadding){
+    var topPadding = vertPadding || padding;
     var xPosition = padding + (index%columns) * (numSize + (padding))
     var yPosition = padding + (Math.floor(index / columns))* (padding+numSize) 
     
-    if(index===9){
+    if(index===9 && !this.icons){
         xPosition = padding + (1) * (numSize + (padding))
 
     }
@@ -77,10 +80,10 @@ function createPosition(index, padding, columns, numSize){
     return [xPosition, yPosition, 0]
 }
 
+//todo: fix this sloppy function
 function layoutPad(numSize, padding, columns, len){
    var width = padding + (numSize + padding) * columns
    var height = padding + (Math.ceil(len/ columns))*(padding+numSize)
-   console.log(width)
    return [width, height]
 }
 
@@ -91,7 +94,8 @@ function createDots(){
         .setPosition(0,-35)
         .setMountPoint(0.5,0)
         .setSizeMode(1,1,1)
-        .setAbsoluteSize(108,10)
+        .setAbsoluteSize(108,10);
+
     var dots = this.numberPadNode.dots
     this.dotsNumber = 4;
     this.dotsCounter = 0;
@@ -114,8 +118,6 @@ function createDots(){
 function createEvents(){
     this.numberPadNode.addComponent({
         onReceive: function(e, payload) {
-            console.log(payload.node)
-
             if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
                 if(e==='touchstart'|| e==='mousedown'){
                     this.markTheDot()
@@ -142,8 +144,8 @@ NumberPad.prototype.markTheDot = function() {
         changeCancelToRemove.call(this)
     }
 
-    if(index === 4){
-    
+    if(index === 3){
+       changeToIcons.call(this)
     }
     
     this.dotsCounter++;
@@ -198,7 +200,6 @@ function createText(){
         content: 'Emergency',
         properties:{
             color: 'white',
-            background:'blue',
             cursor: 'pointer'
         }
     })
@@ -216,7 +217,6 @@ function createText(){
         content: 'Cancel',
         properties:{
             color: 'white',
-            background:'blue',
             cursor: 'pointer'
         }
     })
@@ -239,6 +239,47 @@ function changeRemoveToCancel(){
     this.cancelOrDeleteNode.remove = false;
     this.cancelOrDeleteNode.setAbsoluteSize('50')
     this.cancelOrDeleteNode.el.setContent('Cancel')
+}
+
+function changeToIcons(){
+    var numSize = 45;
+    var padding = 60;
+    var columns = 4;
+    var vert = 45;
+    var len = 10
+    //todo: fix this
+    //flag to remove centered 9 
+    this.icons = true;
+
+    for (var i = 0; i < 10; i++) {
+        var xy = createPosition.call(this, i, padding, columns, numSize, vert)
+        this.numberNodes[i].numKey.changeToIcon({})
+        this.numberNodes[i].position.set(xy[0],xy[1],1000)
+       
+        // //  console.log(this.numberNodes[i].position.getZ())
+        //  FamousEngine.getClock().setTimeout(function(i, xy){
+            this.numberNodes[i].position.set(xy[0],xy[1],0,{ duration:1000, curve: 'easeIn' });
+
+         //  console.log('morgan plant')
+         // }.bind(this, i, xy), 1000)
+         
+        
+        
+
+    }
+
+    var newPadSize = layoutPad(numSize, padding, columns, len);
+    this.numberPadNode.setAbsoluteSize(newPadSize[0],newPadSize[1])
+        .setAlign(-1.5,0)
+        .setMountPoint(0.5,0)
+    
+    // this.numberPadNode.removeChild(this.numberPadNode.dots)
+     this.numberPadNode.removeChild(this.cancelOrDeleteNode)
+     this.numberPadNode.removeChild(this.numberPadTextNode)
+     this.numberPadNode.removeChild(this.emergencyNode)
+    
+    console.log(this.numberPadNode.getAlign())
+
 }
 
 

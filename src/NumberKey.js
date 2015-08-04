@@ -13,19 +13,17 @@ function NumberKey(node, options){
     this.passwordDotsCounter = 0;
 
     // scene
-    this.numberKeyNode = node
+    this.numberKeyNode = node;
     this.elementNode = this.numberKeyNode.addChild();
     
     //create elements
     _createBgElements.call(this, bgColor)
     _createElement.call(this, number, text)
     
-    //positoin elements
+    //position elements
     _layoutElements.call(this, btnSize)
 
 }
-
-
 
 
 function _createElement(number, text){   
@@ -63,7 +61,7 @@ function _createBgElements(bgColor){
     
     this.bgOpacity = new Transitionable(.9)
 
-    var buttonFade = {
+    this.buttonFade = {
         onReceive: function(e){
             
             if(e==='touchstart'||e==='mousedown'){
@@ -73,7 +71,7 @@ function _createBgElements(bgColor){
 
             if(e==='touchend'||e==='mouseup'){
                 this.bgOpacity.set(0, {duration:350})            
-                FamousEngine.requestUpdate(buttonFade)
+                FamousEngine.requestUpdate(this.buttonFade)
             }
 
         }.bind(this),
@@ -81,13 +79,13 @@ function _createBgElements(bgColor){
             var op = this.bgOpacity.get()
             if(op){
                 this.bg.setProperty('background-color','rgba(200, 191, 217, '+op+')' )
-                FamousEngine.requestUpdateOnNextTick(buttonFade)
+                FamousEngine.requestUpdateOnNextTick(this.buttonFade)
             }
             
         }.bind(this)
     }
 
-    this.numberKeyNode.addComponent(buttonFade)
+    this.numberKeyNode.addComponent(this.buttonFade)
 
 }
 
@@ -108,6 +106,28 @@ function _layoutElements(btnSize){
 
 }
 
+NumberKey.prototype.changeToIcon = function(options){
+    this.numberKeyNode.removeComponent(this.buttonFade)
+    var color = options.color || randomColor();
+    var iconText = options.iconText || 'icon'
+    this.bg.setProperty('background', color)
+    this.bg.setProperty('border-radius', '10px')
+    this.bg.setProperty('border', 'none')
+    this.bg.setProperty('box-shadow', '0px 0px 5px black')
+    this.element.setContent(iconText)
+    this.element.setProperty('font-size', '10px')
+    this.elementNode.setPosition(0,65)
+    // this.buttonFade = { 
+    //     onReceive: function(){
+    //         console.log('got it')
+    //     }
+    // }
+    // this.numberKeyNode.addComponent(this.buttonFade)
 
+}
+
+function randomColor(){
+    return 'rgb('+Math.floor(Math.random()*250)+','+Math.floor(Math.random()*250)+','+Math.floor(Math.random()*250)+')'
+}
 
 module.exports = NumberKey;

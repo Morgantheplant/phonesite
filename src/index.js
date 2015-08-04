@@ -7,11 +7,14 @@ var DateAndTime = require('./DateAndTime');
 var Slider = require('./Slider')
 var NumberKey = require('./NumberKey');
 var NumberPad = require('./NumberPad');
-var Transitionable = require('famous/transitions/Transitionable')
+var Transitionable = require('famous/transitions/Transitionable');
+var Camera = require('famous/components/Camera');
 
 function WebSite(){
     this.scene = FamousEngine.createScene();
     this.root = this.scene.addChild();
+    new Camera(this.root).setDepth(1000)
+    console.log('hello')
 
     this.draggerNode = this.root.addChild();
     this.draggerNode.el = new DOMElement(this.draggerNode)
@@ -33,7 +36,7 @@ function WebSite(){
     
     this.cameraNode = this.root.addChild();
     this.cameraNode.pos = new Position(this.cameraNode);
-    new Camera(this.cameraNode)
+    new CameraIcon(this.cameraNode)
 
     this.numbers = this.draggerNode.addChild()
     this.numberPad = new NumberPad(this.numbers)
@@ -193,7 +196,7 @@ function Battery(node){
     })     
 }
 
-function Camera(node){
+function CameraIcon(node){
     new DOMElement(node, {
         classes: ['fa','fa-camera'],
         properties: {
