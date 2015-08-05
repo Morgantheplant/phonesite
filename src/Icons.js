@@ -29,9 +29,10 @@ function Icons(rootnode, options){
             .setAbsoluteSize(numSize, numSize)
         this.iconInfo[i] = new Position(icon)
            .set(xyz[0],xyz[1],xyz[2])
-        
+        var content = './images/icons/'+options.content[i]+'.png';
+      
         this.iconInfo[i].el = new DOMElement(icon, {
-            content: options.content[i],
+            content: '<img style="height:50px;width:50px" src="'+content+'" />',
             classes: ['icon',options.classes[i]||"default"],
             properties: {
                 borderRadius: borderRadius
@@ -75,8 +76,8 @@ Icons.prototype.animateForward = function(){
     this.show.setY(0)
     for (var i = 0; i < len ;i++){
         this.iconInfo[i].setZ(0,{duration:1500, curve:'inOutExpo'})
-        var color = this.options.colors[i]||randomColor()
-        this.iconInfo[i].el.setProperty('background', color)
+        // var color = this.options.colors[i]||randomColor()
+        // this.iconInfo[i].el.setProperty('background', color)
     }
 }
 

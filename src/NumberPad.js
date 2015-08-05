@@ -10,6 +10,7 @@ var Icons = require('./Icons')
 var isMobile = (function() { 
     return ('ontouchstart' in document.documentElement); 
 })();
+console.log(isMobile)
 var eventTypeStart = (isMobile) ? 'touchstart' : 'mousedown';
 var eventTypeEnd = (isMobile) ? 'touchend' : 'mouseup';
 
@@ -136,6 +137,7 @@ function createEvents(){
     this.numberPadNode.addComponent({
         onReceive: function(e, payload) {
             // console.log(e)
+            console.log(eventTypeStart)
             if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
                 if(e===eventTypeStart){
                     this.markTheDot()

@@ -6,8 +6,8 @@
   "vert": 30,
   "initZ": 2000,
   "borderRadius": "10px",
-  "colors":["red", "green", "blue"],
-  "content":[],
-  "iconText":["About", "GitHub", "LinkedIn", "BLOG", "Copy", "Contact", "Settings", "Camera", "Vectr", "LED", "BinSearch", "Binary", "BubSort", "Videos"],
-  "classes":["About", "GitHub", "LinkedIn", "Projects"]
+  "colors":["grey", "none", "white", "none", ],
+  "content":["About", "GitHub", "LinkedIn", "BLOG", "Copy", "Contact", "Settings", "Camera", "Vectr", "LED", "BinSearch", "Binary", "BubSort", "Videos", "PicCapsule", "Art","Calculator"],
+  "iconText":["About", "GitHub", "LinkedIn", "BLOG", "Copy", "Contact", "Settings", "Camera", "Vectr", "LED", "BinSearch", "Binary", "BubSort", "Videos", "PicCapsule", "Art","Calculator"],
+  "classes":["About", "GitHub", "LinkedIn", "BLOG", "Copy", "Contact", "Settings", "Camera", "Vectr", "LED", "BinSearch", "Binary", "BubSort", "Videos", "PicCapsule", "Art","Calculator"]
 }
