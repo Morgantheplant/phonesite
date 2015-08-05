@@ -61,16 +61,19 @@ function _createBgElements(bgColor){
     this.numberKeyNode.addUIEvent('mouseleave');
     
     this.bgOpacity = new Transitionable(.9)
+    
+    var eventTypeStart = this.numberKeyNode.getParent().eventTypeStart;
+    var eventTypeEnd = this.numberKeyNode.getParent().eventTypeEnd;
 
     this.buttonFade = {
         onReceive: function(e){
             
-            if(e==='click'){
+            if(e===eventTypeStart){
                 this.bg.setProperty('background-color', 'rgba(200, 191, 217, .9)')
                 this.bgOpacity.set(.9)
             }
 
-            if(e==='touchend'||e==='mouseup'){
+            if(e===eventTypeEnd){
                 this.bgOpacity.set(0, {duration:350})            
                 FamousEngine.requestUpdate(this.buttonFade)
             }

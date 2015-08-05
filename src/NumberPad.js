@@ -7,15 +7,27 @@ var FamousEngine = require('famous/core/FamousEngine');
 var iconData = require('./iconData')
 var Icons = require('./Icons')
 
+var isMobile = (function() { 
+    return ('ontouchstart' in document.documentElement); 
+})();
+var eventTypeStart = (isMobile) ? 'touchstart' : 'mousedown';
+var eventTypeEnd = (isMobile) ? 'touchend' : 'mouseup';
+
+
+
+
+
 function NumberPad(node){
     
     this.numberPadNode = node;
+    this.numberPadNode.eventTypeStart = eventTypeStart;
+    this.numberPadNode.eventTypeEnd = eventTypeEnd;
     //initial states
     var numSize = 75;
     var padding = 10;
     var columns = 3;
     var numbers = [
-    [1,''],
+    [1,isMobile],
     [2,'ABC'],
     [3,'DEF'],
     [4,'GHI'], 
@@ -117,12 +129,14 @@ function createDots(){
     }
 }
 
+
+
 function createEvents(){
     this.numberPadNode.addComponent({
         onReceive: function(e, payload) {
             // console.log(e)
             if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
-                if(e==='click'){
+                if(e===eventTypeStart){
                     this.markTheDot()
                 }
             }
