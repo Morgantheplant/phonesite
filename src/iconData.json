@@ -1,13 +1,13 @@
 {
-  "len": 10,
+  "len": 17,
   "numSize":50,
   "padding": 20,
   "columns": 4,
-  "vert": 20,
+  "vert": 30,
   "initZ": 2000,
   "borderRadius": "10px",
   "colors":["red", "green", "blue"],
   "content":[],
-  "iconText":["About", "GitHub", "LinkedIn", "Projects"],
+  "iconText":["About", "GitHub", "LinkedIn", "BLOG", "Copy", "Contact", "Settings", "Camera", "Vectr", "LED", "BinSearch", "Binary", "BubSort", "Videos"],
   "classes":["About", "GitHub", "LinkedIn", "Projects"]
 }

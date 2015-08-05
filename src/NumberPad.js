@@ -24,7 +24,7 @@ function NumberPad(node){
     this.numberPadNode.eventTypeEnd = eventTypeEnd;
     //initial states
     var numSize = 75;
-    var padding = 10;
+    var padding = 15;
     var columns = 3;
     var numbers = [
     [1,isMobile],
@@ -76,6 +76,7 @@ function NumberPad(node){
     createDots.call(this)
     createText.call(this)
     createEvents.call(this)
+    createIcons.call(this)
 
 }
 
@@ -166,10 +167,10 @@ NumberPad.prototype.markTheDot = function() {
     if(index === 3){
         FamousEngine.getClock().setTimeout(function(){
             
-            new Icons(this.numberPadNode, iconData)
+            this.icons.animateForward()
             removeChildren.call(this)
             //changeToIcons.call(this)
-        }.bind(this), 500);
+        }.bind(this), 300);
     }
     
     this.dotsCounter++;
@@ -290,6 +291,11 @@ function removeChildren(){
        // this.numberNodes[i].node.setOpacity(0)
        this.numberPadNode.removeChild(this.numberNodes[i].node)
     };
+}
+
+
+function createIcons(){
+    this.icons = new Icons(this.numberPadNode, iconData)
 }
 
 // function changeToIcons(){
