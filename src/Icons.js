@@ -113,7 +113,7 @@ Icons.prototype.animateForward = function(){
 }
 
 Icons.prototype.showIcons = function(){
-    this.iconsNode.scale.set(1,1,1, {duration:500, curve:'easeOut'})
+    this.iconsNode.scale.set(1,1,1, {duration:500, curve:'inOutExpo'})
     this.iconsNode.setPosition(0,0,0)  
 }
 
@@ -153,27 +153,6 @@ function convertRange(OldMin, OldMax, NewMin, NewMax, OldValue){
     return NewValue;
 }
 
-// function addModal(){
-//     this.modal = this.root.addChild()
-//     this.modal.setSizeMode(1,1,1)
-//     this.modal.el =  new DOMElement(this.modal, {
-//         properties:{
-//             background:'white',
-//             pointerEvents:'none'
-//         }
-//     })
-    
-//     this.modal.scale = new Scale(this.modal).set(0,0,0)
-
-// }
-
-// function openModal(x,y,index){
-//     this.modal.setOrigin(x,y)
-//     this.modal.scale.set(1,1,1, {duration:1000, curve: 'easeIn'})
-//     //var site = 'http://localhost:1618/'
-//     //var display = //'<iframe src="'+site+'" ></iframe>'
-//     //this.modal.el.setContent(display)
-// }
 
 function findLocation(i){
     if(i===1){
@@ -187,7 +166,7 @@ function clickedAnIcon(index, columns, len){
     var y = convertRange(0, rows, 0, 1, Math.floor(index/columns))
     //openModal.call(this, x, y)
     this.iconsNode.setOrigin(x,y)
-    this.iconsNode.scale.set(5,5,1, {duration:300, curve:'easeIn'}, function(){
+    this.iconsNode.scale.set(5,5,1, {duration:300, curve:'inOutExpo'}, function(){
      //this.iconsNode.setPosition(0,0,150)   
     }.bind(this))
 }

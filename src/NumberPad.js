@@ -159,7 +159,7 @@ NumberPad.prototype.storeSizes = function(x,y){
 
 NumberPad.prototype.showIcons = function(){
    this.icons.showIcons()
-   
+
 }
 
 NumberPad.prototype.markTheDot = function() {
@@ -176,6 +176,7 @@ NumberPad.prototype.markTheDot = function() {
             
             this.icons.animateForward()
             removeChildren.call(this)
+            this.removeBlurryBackground()
             //changeToIcons.call(this)
         }.bind(this), 300);
     }
@@ -198,6 +199,12 @@ NumberPad.prototype.removeTheDot = function() {
         changeRemoveToCancel.call(this)
     }
 
+}
+
+NumberPad.prototype.removeBlurryBackground = function() {
+    this.mainBG.opacity.set(0,{duration:1000, curve:'easeOut'}, function(){
+        this.mainBG.getParent().removeChild(this.mainBG)
+    }.bind(this))
 }
 
 function createText(){
@@ -279,14 +286,9 @@ function removeChildren(){
     this.numberPadTextNode.setOpacity(0)
     this.emergencyNode.setOpacity(0)
     this.numberPadNode.dots.setOpacity(0)
-    
-    // this.numberPadNode.removeChild(this.cancelOrDeleteNode)
-    // this.numberPadNode.removeChild(this.numberPadTextNode)
-    // this.numberPadNode.removeChild(this.emergencyNode)
-    // this.numberPadNode.removeChild(this.numberPadNode.dots)
+
     for (var i = 0; i < 10; i++) {
         this.numberNodes[i].node.setOpacity(0)
-       // this.numberPadNode.removeChild(this.numberNodes[i].node)
     };
 
 
@@ -295,7 +297,6 @@ function removeChildren(){
     this.numberPadNode.removeChild(this.emergencyNode)
     this.numberPadNode.removeChild(this.numberPadNode.dots)
     for (var i = 0; i < 10; i++) {
-       // this.numberNodes[i].node.setOpacity(0)
        this.numberPadNode.removeChild(this.numberNodes[i].node)
     };
 }

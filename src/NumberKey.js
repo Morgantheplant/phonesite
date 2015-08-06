@@ -110,19 +110,6 @@ function _layoutElements(btnSize){
 
 }
 
-NumberKey.prototype.changeToIcon = function(options){
-    this.numberKeyNode.removeComponent(this.buttonFade)
-    var color = options.color || randomColor();
-    var iconText = options.iconText || 'icon'
-    this.bg.setProperty('background', color)
-    this.bg.setProperty('border-radius', '10px')
-    this.bg.setProperty('border', 'none')
-    this.bg.setProperty('box-shadow', '0px 0px 5px black')
-    this.element.setContent(iconText)
-    this.element.setProperty('font-size', '10px')
-    this.elementNode.setPosition(0,65)
-}
-
 function randomColor(){
     return 'rgb('+Math.floor(Math.random()*250)+','+Math.floor(Math.random()*250)+','+Math.floor(Math.random()*250)+')'
 }

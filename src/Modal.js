@@ -7,7 +7,8 @@ var Scale = require('famous/components/Scale');
 var iconData = require('./iconData');
 
 function Modal(node){
-    this.node = node;
+    this.node = node
+
     this.modalEl =  new DOMElement(this.node, {
         properties:{
             background:'black',
@@ -31,7 +32,7 @@ function Modal(node){
     this.closeNode.addUIEvent('click')
     this.closeNode.addComponent({
         onReceive: function(e){
-            this.hide(200)
+            this.hide(150)
         }.bind(this)
     })
 
@@ -43,7 +44,7 @@ Modal.prototype.hide = function(time){
     }
     if(time){
         this.scale.set(0,0,0, {duration:time})
-        this.position.set(0,0,-1000,{duration:200})
+        this.position.set(0,0,0,{duration:150})
     }
 }
 
@@ -61,9 +62,9 @@ Modal.prototype.show = function(index){
     var xy = findOrigin(index);
   
     this.node.setOrigin(xy[0],xy[1])
-    this.position.set(0,0,-1000,{duration:150}, function(){
-        this.scale.set(1,1,1, {duration:200})
-        this.position.set(0,0,0, {duration:200})       
+    this.position.set(0,0,0,{duration:150}, function(){
+        this.scale.set(1,1,1, {duration:150})
+        this.position.set(0,0,0, {duration:150})       
     }.bind(this))
 }
 

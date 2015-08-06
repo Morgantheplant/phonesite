@@ -10,6 +10,7 @@ var Slider = require('./Slider')
 var NumberKey = require('./NumberKey');
 var NumberPad = require('./NumberPad');
 var Modal = require('./Modal');
+var Background = require('./Background');
 
 function WebSite(){
     this.scene = FamousEngine.createScene();
@@ -19,7 +20,10 @@ function WebSite(){
     this.draggerNode = this.root.addChild();
     this.draggerNode.el = new DOMElement(this.draggerNode)
     this.draggerNode.pos = new Position(this.draggerNode)
-
+    
+    this.backgroundNode = this.root.addChild();
+    this.background = new Background(this.backgroundNode);
+    this.background.scaleBg()
    // this.draggerNode.el.setProperty('background', 'green')
     this.timeNode = this.draggerNode.addChild();
     new DateAndTime(this.timeNode);
@@ -42,6 +46,7 @@ function WebSite(){
 
     this.numbers = this.draggerNode.addChild()
     this.numberPad = new NumberPad(this.numbers)
+    this.numberPad.mainBG = this.background.blur;
    
     FamousEngine.init();
 
@@ -137,8 +142,9 @@ function _bindEvents(){
                
                 t.set(0,{duration:700, curve:lessElastic}, function(){
                     FamousEngine.getClock().clearTimer(timer)
+                    this.background.scaleBg()
                     
-                });
+                }.bind(this));
                 // Not sure why this method call isn't working
                 // could be a bug?
                //centerDragger.call(this)
@@ -167,6 +173,7 @@ function drag(e){
     var newPosX = currentPos + e.centerDelta.x
     this.draggerNode.pos.setX(newPosX)
     this.cameraNode.pos.setX(newPosX)
+    this.background.blur.opacity.set(newPosX/centerScreen)
     if(e.status==='end'&&newPosX<175){
         centerDragger.call(this)
     }
@@ -174,6 +181,7 @@ function drag(e){
     if(newPosX>=175){
         this.padisShowing = true;
         this.draggerNode.pos.setX(centerScreen,{duration:900, curve:'outElastic'})
+        this.background.blur.opacity.set(1, {duration:300, curve:'outElastic'})
     }
 
 }
