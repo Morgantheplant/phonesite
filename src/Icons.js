@@ -113,7 +113,6 @@ Icons.prototype.animateForward = function(){
 }
 
 Icons.prototype.showIcons = function(){
-    //console.log('called')
     this.iconsNode.scale.set(1,1,1, {duration:500, curve:'easeOut'})
     this.iconsNode.setPosition(0,0,0)  
 }

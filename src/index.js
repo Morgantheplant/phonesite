@@ -137,7 +137,7 @@ function _bindEvents(){
                
                 t.set(0,{duration:700, curve:lessElastic}, function(){
                     FamousEngine.getClock().clearTimer(timer)
-                    console.log('done')
+                    
                 });
                 // Not sure why this method call isn't working
                 // could be a bug?

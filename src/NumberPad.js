@@ -159,7 +159,7 @@ NumberPad.prototype.storeSizes = function(x,y){
 
 NumberPad.prototype.showIcons = function(){
    this.icons.showIcons()
-   console.log('showing icons in pad')
+   
 }
 
 NumberPad.prototype.markTheDot = function() {

@@ -10,7 +10,8 @@ function Modal(node){
     this.node = node;
     this.modalEl =  new DOMElement(this.node, {
         properties:{
-            background:'white'
+            background:'black',
+            color:'white'
         }
     })
     
@@ -23,15 +24,8 @@ function Modal(node){
     this.closeNode.setAlign(1,0)
     this.closeNode.setMountPoint(1,0)
     this.closer = new DOMElement(this.closeNode,{
-        content:'x',
-        properties:{
-            color:'black',
-            borderRadius:'50%',
-            textAlign:'center',
-            marginTop:'5px',
-            border:'1px solid black',
-            cursor:'pointer'
-        }
+        content:'<i class="fa fa-times-circle-o"></i>',
+        classes:['closer']
     })
     this.closeNode.hideModal = true;
     this.closeNode.addUIEvent('click')
@@ -54,12 +48,18 @@ Modal.prototype.hide = function(time){
 }
 
 Modal.prototype.show = function(index){
-    
-    var title ='<h1 id="modal_text">'+iconData.content[index]+'</h1>'
-    this.modalEl.setContent(title)
+    var content = iconData.content[index]
+    if( content !== 'Camera'){
+        var title ='<h1 id="modal_text">'+content+'</h1><p>Coming Soon...</p>'
+        this.modalEl.setContent(title)
+    }
+    if(content === 'Camera'){
+        this.modalEl.setContent('<video autoplay style="height:100%;width:100%"></video>')
+        startCamera.call(this);
+    }
 
     var xy = findOrigin(index);
-    console.log(xy[0],xy[1])
+  
     this.node.setOrigin(xy[0],xy[1])
     this.position.set(0,0,-1000,{duration:150}, function(){
         this.scale.set(1,1,1, {duration:200})
@@ -82,6 +82,59 @@ function convertRange(OldMin, OldMax, NewMin, NewMax, OldValue){
     var NewRange = (NewMax - NewMin)  
     var  NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
     return NewValue;
+}
+
+
+function returnCorrectUserMedia () {
+  
+    if(navigator.getUserMedia){
+        return "getUserMedia";
+    }
+  
+    if(navigator.webkitGetUserMedia){
+        return "webkitGetUserMedia";
+    }
+
+    if(navigator.mozGetUserMedia){
+        return "mozGetUserMedia";
+    }
+
+    if(navigator.msGetUserMedia){
+        return "msGetUserMedia";
+    }
+
+    return false;
+}
+
+
+function errorCallback (e) {
+     this.modalEl.setContent('<h1>Camera rejected!</h1>')
+};
+
+function startCamera(){
+
+   var validNavigatorPrefix = returnCorrectUserMedia()
+    
+    if (validNavigatorPrefix) {
+        
+        navigator[validNavigatorPrefix]({video: true}, 
+            function(localMediaStream) {
+                var video = document.querySelector('video');
+                video.src = window.URL.createObjectURL(localMediaStream);
+
+                // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
+                // See crbug.com/110938.
+                video.onloadedmetadata = function(e) {
+                // Ready to go. Do some stuff.
+                };
+        }, errorCallback.bind(this));
+    
+    }
+
+    if(!validNavigatorPrefix) {
+     alert('getUserMedia() is not supported in your browser');
+    }
+  
 }
 
 module.exports = Modal;
