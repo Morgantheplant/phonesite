@@ -3,12 +3,13 @@ var DOMElement = require('famous/dom-renderables/DOMElement');
 var FamousEngine = require('famous/core/FamousEngine');
 var GestureHandler = require('famous/components/GestureHandler');
 var Position = require('famous/components/Position')
+var Transitionable = require('famous/transitions/Transitionable');
+var Camera = require('famous/components/Camera');
 var DateAndTime = require('./DateAndTime');
 var Slider = require('./Slider')
 var NumberKey = require('./NumberKey');
 var NumberPad = require('./NumberPad');
-var Transitionable = require('famous/transitions/Transitionable');
-var Camera = require('famous/components/Camera');
+var Modal = require('./Modal');
 
 function WebSite(){
     this.scene = FamousEngine.createScene();
@@ -18,9 +19,8 @@ function WebSite(){
     this.draggerNode = this.root.addChild();
     this.draggerNode.el = new DOMElement(this.draggerNode)
     this.draggerNode.pos = new Position(this.draggerNode)
-    
-    this.padisShowing = false;
 
+   // this.draggerNode.el.setProperty('background', 'green')
     this.timeNode = this.draggerNode.addChild();
     new DateAndTime(this.timeNode);
 
@@ -36,6 +36,9 @@ function WebSite(){
     this.cameraNode = this.root.addChild();
     this.cameraNode.pos = new Position(this.cameraNode);
     new CameraIcon(this.cameraNode)
+
+    this.modalNode = this.root.addChild();
+    this.modal = new Modal(this.modalNode);
 
     this.numbers = this.draggerNode.addChild()
     this.numberPad = new NumberPad(this.numbers)
@@ -87,11 +90,19 @@ function _positionChildren(){
     this.numbers
         .setAlign(-1.5,0.5)
         .setMountPoint(0.5,0.5)
+
+    this.modal.hide();
     
     this.root.addComponent({
+        onReceive:function(e,p){
+            if(e==='click'&&p.node.hideModal){
+                this.numberPad.showIcons()
+            }
+
+        }.bind(this),
         onSizeChange: function(x,y){
             this.screenSize = [x,y]
-
+            this.numberPad.storeSizes(x,y) 
             if(this.padisShowing){
                 layoutPad.call(this)
             }
@@ -108,6 +119,10 @@ function _bindEvents(){
     
     this.draggerNode.addComponent({
         onReceive: function(e, payload){
+            if(e==='click'&&payload.node.id!==undefined){
+                this.modal.show(payload.node.id)
+            }
+
             if(payload.node.cancel){
                 this.padisShowing = false;
                 // inner transitionable is not working
@@ -211,3 +226,4 @@ function lessElastic(t) {
     s = p/(2*Math.PI) * Math.asin(1.0/a);
     return a*Math.pow(2,-15*t) * Math.sin((t-s)*(2*Math.PI)/p) + 1.0;
 }
+

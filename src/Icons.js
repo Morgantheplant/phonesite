@@ -2,13 +2,19 @@ var Position = require('famous/components/Position')
 var DOMElement = require('famous/dom-renderables/DOMElement');
 var FamousEngine = require('famous/core/FamousEngine');
 var Align = require('famous/components/Align')
-
+var Scale = require('famous/components/Scale')
+var Position = require('famous/components/Position')
 
 function Icons(rootnode, options){
     this.root = rootnode;
     this.iconsNode = rootnode.addChild()
-    this.show = new Align(this.iconsNode).setY(-1)   //.setScale(0,0);
+    this.iconsNode.scale = new Scale(this.iconsNode);
+    this.iconsNode.position = new Position(this.iconsNode)
+    this.show = new Align(this.iconsNode).setY(-1)
+       //.setScale(0,0);
     this.options = options;
+    
+    //addModal.call(this)
 
     var len = options.len || 10;
     var numSize = options.numSize || 50;
@@ -19,6 +25,19 @@ function Icons(rootnode, options){
     var borderRadius = options.borderRadius;
     this.colors = options.colors;
 
+    this.iconsNode.addComponent({
+        onReceive:function(e,p){
+            console.log(e)
+           if(e==="click"){
+            clickedAnIcon.call(this, p.node.id, columns, len)
+            //this.iconsNode.position.set(0,0,10, {duration:500})
+
+            
+            //findLocation(index)
+           }
+        }.bind(this)
+    })
+
     this.iconInfo = []
 
     for (var i = 0; i < len; i++) {
@@ -27,10 +46,13 @@ function Icons(rootnode, options){
         var icon = this.iconsNode.addChild()
             .setSizeMode(1,1,1)
             .setAbsoluteSize(numSize, numSize)
+        icon.id = i;
+        
         this.iconInfo[i] = new Position(icon)
            .set(xyz[0],xyz[1],xyz[2])
+        
         var content = './images/icons/'+options.content[i]+'.png';
-      
+
         this.iconInfo[i].el = new DOMElement(icon, {
             content: '<img style="height:50px;width:50px" src="'+content+'" />',
             classes: ['icon',options.classes[i]||"default"],
@@ -39,6 +61,7 @@ function Icons(rootnode, options){
             }
         })
         
+        icon.addUIEvent('click')
         
         //positions.set(xyz[0],xyz[1],0,{ duration:4000, curve: 'easeIn' })
 
@@ -61,8 +84,16 @@ function Icons(rootnode, options){
        
     }
 
+      
+
    
   
+}
+
+Icons.prototype.storeSizes = function(x,y){
+    this.screenSizes = [x,y]
+    //this.modal.setAbsoluteSize(x,y)
+    //this.modal.setPosition(-x/2, -y/2)
 }
 
 Icons.prototype.animateForward = function(){
@@ -79,6 +110,12 @@ Icons.prototype.animateForward = function(){
         // var color = this.options.colors[i]||randomColor()
         // this.iconInfo[i].el.setProperty('background', color)
     }
+}
+
+Icons.prototype.showIcons = function(){
+    //console.log('called')
+    this.iconsNode.scale.set(1,1,1, {duration:500, curve:'easeOut'})
+    this.iconsNode.setPosition(0,0,0)  
 }
 
 
@@ -109,5 +146,52 @@ function layoutPad(numSize, padding, columns, len){
    var height = padding + (Math.ceil(len/ columns))*(padding+numSize)
    return [width, height]
 }
+
+function convertRange(OldMin, OldMax, NewMin, NewMax, OldValue){
+    var OldRange = (OldMax - OldMin)  
+    var NewRange = (NewMax - NewMin)  
+    var  NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
+    return NewValue;
+}
+
+// function addModal(){
+//     this.modal = this.root.addChild()
+//     this.modal.setSizeMode(1,1,1)
+//     this.modal.el =  new DOMElement(this.modal, {
+//         properties:{
+//             background:'white',
+//             pointerEvents:'none'
+//         }
+//     })
+    
+//     this.modal.scale = new Scale(this.modal).set(0,0,0)
+
+// }
+
+// function openModal(x,y,index){
+//     this.modal.setOrigin(x,y)
+//     this.modal.scale.set(1,1,1, {duration:1000, curve: 'easeIn'})
+//     //var site = 'http://localhost:1618/'
+//     //var display = //'<iframe src="'+site+'" ></iframe>'
+//     //this.modal.el.setContent(display)
+// }
+
+function findLocation(i){
+    if(i===1){
+        window.location = 'https://github.com/morgantheplant'
+    }
+}
+
+function clickedAnIcon(index, columns, len){
+    var x = convertRange(0, columns-1, 0, 1, index%columns)
+    var rows = Math.ceil(len/columns)-1
+    var y = convertRange(0, rows, 0, 1, Math.floor(index/columns))
+    //openModal.call(this, x, y)
+    this.iconsNode.setOrigin(x,y)
+    this.iconsNode.scale.set(5,5,1, {duration:300, curve:'easeIn'}, function(){
+     //this.iconsNode.setPosition(0,0,150)   
+    }.bind(this))
+}
+
 
 module.exports = Icons;

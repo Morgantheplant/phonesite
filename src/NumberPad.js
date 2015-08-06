@@ -1,16 +1,15 @@
-var NumberKey = require('./NumberKey');
 var Position = require('famous/components/Position')
 var DOMElement = require('famous/dom-renderables/DOMElement');
-var Dot = require('./Dot');
 var Transitionable = require('famous/transitions/Transitionable');
 var FamousEngine = require('famous/core/FamousEngine');
+var Dot = require('./Dot');
+var NumberKey = require('./NumberKey');
 var iconData = require('./iconData')
 var Icons = require('./Icons')
 
 var isMobile = (function() { 
     return ('ontouchstart' in document.documentElement); 
 })();
-console.log(isMobile)
 var eventTypeStart = (isMobile) ? 'touchstart' : 'mousedown';
 var eventTypeEnd = (isMobile) ? 'touchend' : 'mouseup';
 
@@ -136,8 +135,6 @@ function createDots(){
 function createEvents(){
     this.numberPadNode.addComponent({
         onReceive: function(e, payload) {
-            // console.log(e)
-            console.log(eventTypeStart)
             if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
                 if(e===eventTypeStart){
                     this.markTheDot()
@@ -155,7 +152,15 @@ function createEvents(){
    
 }
 
+NumberPad.prototype.storeSizes = function(x,y){
+    this.screenSizes = [x,y]
+    this.icons.storeSizes(x,y)
+}
 
+NumberPad.prototype.showIcons = function(){
+   this.icons.showIcons()
+   console.log('showing icons in pad')
+}
 
 NumberPad.prototype.markTheDot = function() {
     var index = this.dotsCounter;
@@ -299,57 +304,5 @@ function removeChildren(){
 function createIcons(){
     this.icons = new Icons(this.numberPadNode, iconData)
 }
-
-// function changeToIcons(){
-//     var numSize = 50;
-//     var padding = 20;
-//     var columns = 4;
-//     var vert = 20;
-//     var len = 10
-//     //todo: fix this
-//     //flag to remove centered 9 
-//     this.icons = true;
-
-//     for (var i = 0; i < 10; i++) {
-//         this.numberNodes[i].node.setOpacity(0)
-//         var xyz = iconPositions(i, padding, columns, numSize, 2000, vert, len)
-//         this.numberNodes[i].position.set(xyz[0],xyz[1],xyz[2])
-//         this.numberNodes[i].numKey.numberKeyNode.setAbsoluteSize(numSize, numSize)
-//         this.numberNodes[i].numKey.changeToIcon({})
-//         this.numberNodes[i].node.setOpacity(1)
-//         this.numberNodes[i].position.set(xyz[0],xyz[1],0,{ duration:4000, curve: 'easeIn' })
-
-//     }
-
-//     var newPadSize = layoutPad(numSize, padding, columns, len);
-//     this.numberPadNode.setAbsoluteSize(newPadSize[0],newPadSize[1])
-//         .setAlign(-1.5,0.05)
-//         .setMountPoint(0.5,0)
-    
-//      // this.numberPadNode.removeChild(this.cancelOrDeleteNode)
-//      // this.numberPadNode.removeChild(this.numberPadTextNode)
-//      // this.numberPadNode.removeChild(this.emergencyNode)
-    
-//     console.log(this.numberPadNode.getAlign())
-
-// }
-
-// function iconPositions(index, padding, columns, btnSizes, initZ, vert, len){
-//      var xPosition = padding + (index%columns) * (btnSizes + (padding))
-//      var yPosition = padding + (Math.floor(index / columns))* (vert+btnSizes) 
-//      var zPosition;
-//      if(index%columns===columns-1||index%columns===0){
-//         zPosition = initZ*400
-//      }
-//      if(index%columns < columns-1 && index%columns > 0){
-//         zPosition = initZ*150
-//         if(Math.ceil(index / columns)===1||Math.ceil(index / columns)===Math.ceil(len.length/columns)){
-//           zPosition += initZ*150
-//         }
-//      }
-              
-//     return [xPosition, yPosition, zPosition]
-// }
-
 
 module.exports = NumberPad;
