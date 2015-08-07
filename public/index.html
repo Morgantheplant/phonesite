@@ -26,34 +26,71 @@
                 -webkit-tap-highlight-color: transparent;
                 -webkit-perspective: 0;
                 perspective: none;
-                overflow: hidden;
-              /*  background-image: url(./images/stars.jpg);
-                background-size: cover;*/
-                overflow: hidden;
+                /*overflow: hidden;*/
                 font-family: Arimo,Droid Sans, sans-serif;
+                -moz-user-select: none; 
+                -khtml-user-select: none; 
+                -webkit-user-select: none; 
+                -o-user-select: none; 
+                background:black;
             }
 
             .text {
                 font-size: 12px
             }
             
-            #modal_text {
-                margin:55px 10px 0px 45px
+          /*   {
+                margin-top:55px;
+                margin-left: 40px;
+                margin-right: 10px
+            }*/
+
+            #modal_text_container {
+                margin:4em;
+                overflow:scroll !important;
+            
             }
 
-            p {
-                margin:55px 10px 0px 45px
-            
+            #modal_text_container a {
+                color:teal;
+                text-decoration: none;
+            }
+
+            #modal_text_container img {
+                width:100%;
             }
 
             .closer {
                 color: white;
                 font-size: 26px;
+                cursor:pointer;
+             /*   margin:20px;
+                padding:20px;*/
             }
+
+
+            #myimage {
+               margin:10px;
+               height:80%;
+               width:auto;
+            }
+
+            #image_input {
+                margin:20px;
+            }
+
 
         </style>
     </head>
     <body>
+        <script>
+        function updateImage(input) {
+            var file = input.files[0];
+            var imgURL = URL.createObjectURL(file)
+            document.querySelector('#myimage').src = imgURL;
+        }
+
+        </script>
         <script src="bundle.js"></script>
     </body>
 </html>

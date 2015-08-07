@@ -8,11 +8,11 @@ var FamousEngine = require('famous/core/FamousEngine');
 
 
 function Background(node, options){
-    node.setPosition(0,0,-5)
+    node.setPosition(0,0,-10)
         .setSizeMode(0,0,0)
         .setMountPoint(0.5,0.5)
         .setAlign(0.5,0.5)
-        .setProportionalSize(1.5,1.5)
+        .setProportionalSize(1.2,1.2)
         .setOrigin(0.5,0.5)
 
     this.scale = new Scale(node);
@@ -20,18 +20,24 @@ function Background(node, options){
 
     new DOMElement(this.main, {
         tagName:'img',
+        properties:{
+            zIndex:'-5'
+        },
         attributes:{
           src:'./images/stars.jpg'
         }
     });
 
     this.blur = node.addChild()
-        .setPosition(0,0,0);
+        .setPosition(0,0,1);
     this.blur.opacity = new Opacity(this.blur)
         .set(0);
 
     new DOMElement(this.blur, {
         tagName:'img',
+        properties:{
+            zIndex:'-2'
+        },
         attributes:{
           src:'./images/stars_blur.jpg'
         }

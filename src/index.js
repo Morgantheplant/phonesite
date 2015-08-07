@@ -21,9 +21,6 @@ function WebSite(){
     this.draggerNode.el = new DOMElement(this.draggerNode)
     this.draggerNode.pos = new Position(this.draggerNode)
     
-    this.backgroundNode = this.root.addChild();
-    this.background = new Background(this.backgroundNode);
-    this.background.scaleBg()
    // this.draggerNode.el.setProperty('background', 'green')
     this.timeNode = this.draggerNode.addChild();
     new DateAndTime(this.timeNode);
@@ -41,8 +38,14 @@ function WebSite(){
     this.cameraNode.pos = new Position(this.cameraNode);
     new CameraIcon(this.cameraNode)
 
+    this.backgroundNode = this.root.addChild();
+    this.background = new Background(this.backgroundNode);
+    this.background.scaleBg()
+
     this.modalNode = this.root.addChild();
     this.modal = new Modal(this.modalNode);
+    
+    
 
     this.numbers = this.draggerNode.addChild()
     this.numberPad = new NumberPad(this.numbers)
@@ -95,9 +98,10 @@ function _positionChildren(){
     this.numbers
         .setAlign(-1.5,0.5)
         .setMountPoint(0.5,0.5)
+        .setPosition(0,0,1)
 
-    this.modal.hide();
-    
+    this.modal.initBlackScreen();
+
     this.root.addComponent({
         onReceive:function(e,p){
             if(e==='click'&&p.node.hideModal){

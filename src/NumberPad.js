@@ -13,10 +13,6 @@ var isMobile = (function() {
 var eventTypeStart = (isMobile) ? 'touchstart' : 'mousedown';
 var eventTypeEnd = (isMobile) ? 'touchend' : 'mouseup';
 
-
-
-
-
 function NumberPad(node){
     
     this.numberPadNode = node;
@@ -27,7 +23,7 @@ function NumberPad(node){
     var padding = 15;
     var columns = 3;
     var numbers = [
-    [1,isMobile],
+    [1,''],
     [2,'ABC'],
     [3,'DEF'],
     [4,'GHI'], 
@@ -106,7 +102,7 @@ function createDots(){
     // Node that postions the Dots as a unit
     this.numberPadNode.dots = this.numberPadNode.addChild()
         .setAlign(0.5,0)
-        .setPosition(0,-35)
+        .setPosition(0,-35,1)
         .setMountPoint(0.5,0)
         .setSizeMode(1,1,1)
         .setAbsoluteSize(108,10);
@@ -211,7 +207,7 @@ function createText(){
     var padding = 10;
 
     this.numberPadTextNode = this.numberPadNode.addChild()
-        .setPosition(0,-70,-5)
+        .setPosition(0,-70,0)
         .setAlign(0.5,0)
         .setMountPoint(0.5,0)
         .setSizeMode(1,1,1)

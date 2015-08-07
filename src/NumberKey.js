@@ -67,7 +67,7 @@ function _createBgElements(bgColor){
 
     this.buttonFade = {
         onReceive: function(e){
-            
+           
             if(e===eventTypeStart){
                 this.bg.setProperty('background-color', 'rgba(200, 191, 217, .9)')
                 this.bgOpacity.set(.9)

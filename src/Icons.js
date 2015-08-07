@@ -11,10 +11,8 @@ function Icons(rootnode, options){
     this.iconsNode.scale = new Scale(this.iconsNode);
     this.iconsNode.position = new Position(this.iconsNode)
     this.show = new Align(this.iconsNode).setY(-1)
-       //.setScale(0,0);
     this.options = options;
     
-    //addModal.call(this)
 
     var len = options.len || 10;
     var numSize = options.numSize || 50;
@@ -27,7 +25,6 @@ function Icons(rootnode, options){
 
     this.iconsNode.addComponent({
         onReceive:function(e,p){
-            console.log(e)
            if(e==="click"){
             clickedAnIcon.call(this, p.node.id, columns, len)
             //this.iconsNode.position.set(0,0,10, {duration:500})
@@ -51,13 +48,14 @@ function Icons(rootnode, options){
         this.iconInfo[i] = new Position(icon)
            .set(xyz[0],xyz[1],xyz[2])
         
-        var content = './images/icons/'+options.content[i]+'.png';
+        var content = './images/icons/'+options.classes[i].toLowerCase()+'.png';
 
         this.iconInfo[i].el = new DOMElement(icon, {
             content: '<img style="height:50px;width:50px" src="'+content+'" />',
             classes: ['icon',options.classes[i]||"default"],
             properties: {
-                borderRadius: borderRadius
+                borderRadius: borderRadius,
+                cursor:'pointer'
             }
         })
         
