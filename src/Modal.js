@@ -13,6 +13,7 @@ function Modal(node){
     this.node = node
 
     this.modalEl =  new DOMElement(this.node, {
+        classes:['modal'],
         properties:{
             background:'black',
             color:'white',
@@ -26,7 +27,7 @@ function Modal(node){
 
     this.closeNode = this.node.addChild()
     this.closeNode.setSizeMode(1,1,1)
-    this.closeNode.setPosition(0,0,2)
+    this.closeNode.setPosition(0,0,6)
     this.closeNode.setAbsoluteSize(25,25)
     this.closeNode.setAlign(.95,0.05)
     this.closeNode.setMountPoint(.95,0)
@@ -50,13 +51,13 @@ Modal.prototype.hide = function(time){
     }
     if(time){
         this.scale.set(0,0,0, {duration:time})
-        this.position.set(0,0,0,{duration:150})
+        this.position.set(0,0,5,{duration:150})
     }
 }
 
 Modal.prototype.initBlackScreen = function(){
     this.scale.set(1.5,1.5,1)
-    this.position.set(0,0,1)
+    this.position.set(0,0,5)
     //this.show()
     FamousEngine.getClock().setTimeout(function(){
         this.opacity.set(0, {duration:2000, curve:'easeInOut'}, function(){
@@ -73,9 +74,9 @@ Modal.prototype.show = function(index){
     var xy = findOrigin(index);
   
     this.node.setOrigin(xy[0],xy[1])
-    this.position.set(0,0,0,{duration:150}, function(){
+    this.position.set(0,0,5,{duration:150}, function(){
         this.scale.set(1,1,1, {duration:150})
-        this.position.set(0,0,1, {duration:150})       
+        this.position.set(0,0,5, {duration:150})       
     }.bind(this))
     
     if( icon !== 'Camera'){
