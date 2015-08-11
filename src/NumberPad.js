@@ -1,11 +1,11 @@
-var Position = require('famous/components/Position')
+'use strict';
+var Position = require('famous/components/Position');
 var DOMElement = require('famous/dom-renderables/DOMElement');
-var Transitionable = require('famous/transitions/Transitionable');
 var FamousEngine = require('famous/core/FamousEngine');
 var Dot = require('./Dot');
 var NumberKey = require('./NumberKey');
-var iconData = require('./iconData')
-var Icons = require('./Icons')
+var iconData = require('./iconData');
+var Icons = require('./Icons');
 
 var isMobile = (function() { 
     return ('ontouchstart' in document.documentElement); 
@@ -33,69 +33,68 @@ function NumberPad(node){
     [8,'TUV'],
     [9,'WXYZ'],
     [0,''] 
-    ]
+    ];
     
     this.numberNodes = {};
-    var len = numbers.length
+    var len = numbers.length;
 
-    var padDimensions = layoutPad(numSize, padding, columns, len)
+    var padDimensions = layoutPad(numSize, padding, columns, len);
     
     this.numberPadNode
         .setSizeMode(1,1,1)
         .setAbsoluteSize(padDimensions[0],padDimensions[1])
         .setAlign(0.5,0.5)
-        .setMountPoint(0.5,0.5)
+        .setMountPoint(0.5,0.5);
     
 
     for (var i = 0; i < len; i++){
-        var numNode = this.numberPadNode.addChild()
+        var numNode = this.numberPadNode.addChild();
         
         var numKey = new NumberKey(numNode, {
             number: numbers[i][0],
             text: numbers[i][1],
             btnSize: 75
-        })
+        });
 
-        var xyz = createPosition.call(this, i, padding, columns, numSize)
+        var xyz = createPosition.call(this, i, padding, columns, numSize);
     
-        var pos = new Position(numNode).set(xyz[0],xyz[1])
+        var pos = new Position(numNode).set(xyz[0],xyz[1]);
 
         this.numberNodes[i] = {
             node: numNode,
             numKey: numKey,
             position: pos
-        }
+        };
 
 
     }
 
-    createDots.call(this)
-    createText.call(this)
-    createEvents.call(this)
-    createIcons.call(this)
+    createDots.call(this);
+    createText.call(this);
+    createEvents.call(this);
+    createIcons.call(this);
 
 }
 
 //todo: fix this sloppy function
 
 function createPosition(index, padding, columns, numSize, vertPadding){
-    var topPadding = vertPadding || padding;
-    var xPosition = padding + (index%columns) * (numSize + (padding))
-    var yPosition = padding + (Math.floor(index / columns))* (padding+numSize) 
+    var xPosition = padding + (index%columns) * (numSize + (padding));
+    var yPosition = padding + (Math.floor(index / columns))* (padding+numSize); 
     
     if(index===9 && !this.icons){
-        xPosition = padding + (1) * (numSize + (padding))
+        xPosition = padding + (1) * (numSize + (padding));
 
     }
 
-    return [xPosition, yPosition, 0]
+    return [xPosition, yPosition, 0];
 }
 
 //todo: fix this sloppy function
 function layoutPad(numSize, padding, columns, len){
-   var width = padding + (numSize + padding) * columns
-   var height = padding + (Math.ceil(len/ columns))*(padding+numSize)
-   return [width, height]
+   var width = padding + (numSize + padding) * columns;
+   var height = padding + (Math.ceil(len/ columns))*(padding+numSize);
+   return [width, height];
 }
 
 function createDots(){
@@ -107,7 +106,7 @@ function createDots(){
         .setSizeMode(1,1,1)
         .setAbsoluteSize(108,10);
 
-    var dots = this.numberPadNode.dots
+    var dots = this.numberPadNode.dots;
     this.dotsNumber = 4;
     this.dotsCounter = 0;
     //build and position the dots
@@ -116,13 +115,13 @@ function createDots(){
         var dotsPadding = 20;
         var dotsSize = [12,12];
 
-        dots[i] = dots.addChild()
-        dots[i].setPosition((i*dotsSize[0])+(i*dotsPadding),0,0)
+        dots[i] = dots.addChild();
+        dots[i].setPosition((i*dotsSize[0])+(i*dotsPadding),0,0);
         
         dots[i].instance = new Dot(dots[i], {
             size: dotsSize,
             color: 'rgba(200, 191, 217, .7)'
-        })
+        });
     }
 }
 
@@ -133,12 +132,12 @@ function createEvents(){
         onReceive: function(e, payload) {
             if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
                 if(e===eventTypeStart){
-                    this.markTheDot()
+                    this.markTheDot();
                 }
             }
      
             if(payload.node === this.emergencyNode){
-                alert('MayDay!')
+                alert('MayDay!');
             }
 
         }.bind(this)
@@ -149,14 +148,14 @@ function createEvents(){
 }
 
 NumberPad.prototype.storeSizes = function(x,y){
-    this.screenSizes = [x,y]
-    this.icons.storeSizes(x,y)
-}
+    this.screenSizes = [x,y];
+    this.icons.storeSizes(x,y);
+};
 
 NumberPad.prototype.showIcons = function(){
-   this.icons.showIcons()
+   this.icons.showIcons();
 
-}
+};
 
 NumberPad.prototype.markTheDot = function() {
     var index = this.dotsCounter;
@@ -164,21 +163,21 @@ NumberPad.prototype.markTheDot = function() {
 
     if(dotsHash[index]){
         dotsHash[index].instance.on();
-        changeCancelToRemove.call(this)
+        changeCancelToRemove.call(this);
     }
 
     if(index === 3){
         FamousEngine.getClock().setTimeout(function(){
             
-            this.icons.animateForward()
-            removeChildren.call(this)
-            this.removeBlurryBackground()
+            this.icons.animateForward();
+            removeChildren.call(this);
+            this.removeBlurryBackground();
             //changeToIcons.call(this)
         }.bind(this), 300);
     }
     
     this.dotsCounter++;
-}
+};
 
 NumberPad.prototype.removeTheDot = function() {
     if(this.dotsCounter>0){
@@ -192,16 +191,16 @@ NumberPad.prototype.removeTheDot = function() {
     }
 
     if(index===0){
-        changeRemoveToCancel.call(this)
+        changeRemoveToCancel.call(this);
     }
 
-}
+};
 
 NumberPad.prototype.removeBlurryBackground = function() {
     this.mainBG.opacity.set(0,{duration:1000, curve:'easeOut'}, function(){
-        this.mainBG.getParent().removeChild(this.mainBG)
-    }.bind(this))
-}
+        this.mainBG.getParent().removeChild(this.mainBG);
+    }.bind(this));
+};
 
 function createText(){
     var padding = 10;
@@ -211,25 +210,25 @@ function createText(){
         .setAlign(0.5,0)
         .setMountPoint(0.5,0)
         .setSizeMode(1,1,1)
-        .setAbsoluteSize(176,12)
+        .setAbsoluteSize(176,12);
 
     new DOMElement(this.numberPadTextNode, {
         content: 'Enter any Four Numbers',
         properties:{
             color: 'white'
         }
-    })
+    });
 
     this.emergencyNode = this.numberPadNode.addChild()
         .setPosition(padding,55,0)
         .setAlign(0,1)
         .setSizeMode(1,1,1)
-        .setAbsoluteSize(80,12)
+        .setAbsoluteSize(80,12);
 
     
 
-    this.emergencyNode.addUIEvent('mousedown')
-    this.emergencyNode.addUIEvent('touchstart')
+    this.emergencyNode.addUIEvent('mousedown');
+    this.emergencyNode.addUIEvent('touchstart');
 
     new DOMElement(this.emergencyNode, {
         content: 'Emergency',
@@ -237,14 +236,14 @@ function createText(){
             color: 'white',
             cursor: 'pointer'
         }
-    })
+    });
 
     this.cancelOrDeleteNode = this.numberPadNode.addChild()
         .setPosition(-padding,55,0)
         .setAlign(1,1)
         .setMountPoint(1,0)
         .setSizeMode(1,1,1)
-        .setAbsoluteSize(50,12)
+        .setAbsoluteSize(50,12);
 
     this.cancelOrDeleteNode.cancel = true;
 
@@ -254,52 +253,51 @@ function createText(){
             color: 'white',
             cursor: 'pointer'
         }
-    })
+    });
 
-    this.cancelOrDeleteNode.addUIEvent('mousedown')
-    this.cancelOrDeleteNode.addUIEvent('touchstart')
+    this.cancelOrDeleteNode.addUIEvent('mousedown');
+    this.cancelOrDeleteNode.addUIEvent('touchstart');
 
 }
 
 function changeCancelToRemove(){
     this.cancelOrDeleteNode.cancel = false;
     this.cancelOrDeleteNode.remove = true;
-    this.cancelOrDeleteNode.setAbsoluteSize('60')
-    this.cancelOrDeleteNode.el.setContent('Remove')
-
+    this.cancelOrDeleteNode.setAbsoluteSize('60');
+    this.cancelOrDeleteNode.el.setContent('Remove');
 }
 
 function changeRemoveToCancel(){
     this.cancelOrDeleteNode.cancel = true;
     this.cancelOrDeleteNode.remove = false;
-    this.cancelOrDeleteNode.setAbsoluteSize('50')
-    this.cancelOrDeleteNode.el.setContent('Cancel')
+    this.cancelOrDeleteNode.setAbsoluteSize('50');
+    this.cancelOrDeleteNode.el.setContent('Cancel');
 }
 
 function removeChildren(){
-    this.cancelOrDeleteNode.setOpacity(0)
-    this.cancelOrDeleteNode.setOpacity(0)
-    this.numberPadTextNode.setOpacity(0)
-    this.emergencyNode.setOpacity(0)
-    this.numberPadNode.dots.setOpacity(0)
+    this.cancelOrDeleteNode.setOpacity(0);
+    this.cancelOrDeleteNode.setOpacity(0);
+    this.numberPadTextNode.setOpacity(0);
+    this.emergencyNode.setOpacity(0);
+    this.numberPadNode.dots.setOpacity(0);
 
     for (var i = 0; i < 10; i++) {
-        this.numberNodes[i].node.setOpacity(0)
-    };
+        this.numberNodes[i].node.setOpacity(0);
+    }
 
 
-    this.numberPadNode.removeChild(this.cancelOrDeleteNode)
-    this.numberPadNode.removeChild(this.numberPadTextNode)
-    this.numberPadNode.removeChild(this.emergencyNode)
-    this.numberPadNode.removeChild(this.numberPadNode.dots)
-    for (var i = 0; i < 10; i++) {
-       this.numberPadNode.removeChild(this.numberNodes[i].node)
-    };
+    this.numberPadNode.removeChild(this.cancelOrDeleteNode);
+    this.numberPadNode.removeChild(this.numberPadTextNode);
+    this.numberPadNode.removeChild(this.emergencyNode);
+    this.numberPadNode.removeChild(this.numberPadNode.dots);
+    for (var j = 0; j < 10; j++) {
+       this.numberPadNode.removeChild(this.numberNodes[j].node);
+    }
 }
 
 
 function createIcons(){
-    this.icons = new Icons(this.numberPadNode, iconData)
+    this.icons = new Icons(this.numberPadNode, iconData);
 }
 
 module.exports = NumberPad;
