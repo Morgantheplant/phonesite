@@ -8,17 +8,35 @@ var iconData = require('./iconData');
 var Icons = require('./Icons');
 
 var isMobile = (function() { 
-    return ('ontouchstart' in document.documentElement); 
+    var isMobile = false
+    if('ontouchstart' in document.documentElement){
+       // mouse events will override touch events unless  
+       var UAstring =  window.navigator.userAgent.toLowerCase();
+       isMobile = searchUAStringForSelectMobileDevices(UAstring);
+       // prevents swipe action from activating the back button 
+       window.history.replaceState(null, null)
+    }
+    
+    return isMobile; 
 })();
+
+function searchUAStringForSelectMobileDevices(UA){
+   return (UA.indexOf('mobile')!==-1||UA.indexOf('iphone')!==-1||UA.indexOf('android')!==-1||UA.indexOf('ipad')!==-1)
+}
+
+
 var eventTypeStart = (isMobile) ? 'touchstart' : 'mousedown';
 var eventTypeEnd = (isMobile) ? 'touchend' : 'mouseup';
+
 
 function NumberPad(node){
     
     this.numberPadNode = node;
     this.numberPadNode.eventTypeStart = eventTypeStart;
     this.numberPadNode.eventTypeEnd = eventTypeEnd;
-    //initial states
+
+
+    
     var numSize = 75;
     var padding = 15;
     var columns = 3;
@@ -131,7 +149,7 @@ function createEvents(){
     this.numberPadNode.addComponent({
         onReceive: function(e, payload) {
             if(payload.node !== this.cancelOrDeleteNode && payload.node !== this.emergencyNode) {
-                if(e===eventTypeStart){
+                if(e===this.numberPadNode.eventTypeStart){
                     this.markTheDot();
                 }
             }

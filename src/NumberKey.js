@@ -58,6 +58,7 @@ function _createBgElements(bgColor){
     this.numberKeyNode.addUIEvent('touchend');
     this.numberKeyNode.addUIEvent('mouseup');
     this.numberKeyNode.addUIEvent('mouseleave');
+     this.numberKeyNode.addUIEvent('mouseover');
     
     this.bgOpacity = new Transitionable(.9);
     
