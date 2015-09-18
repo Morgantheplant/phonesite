@@ -1,7 +1,7 @@
 {
-  "name": "engine-seed",
+  "name": "phoneshite",
   "version": "1.0.0",
-  "description": "seed project for a browserified version of the Famous Engine",
+  "description": "Web iOS concept site using Famous Engine",
   "browser": "src/index.js",
   "scripts": {
     "build": "browserify src/index.js -g uglifyify | uglifyjs --screw-ie8 -m -c dead_code,sequences,conditionals,booleans,unused,if_return,join_vars,drop_debugger > public/bundle.js",
@@ -12,10 +12,6 @@
     "lint-jscs": "jscs src/",
     "lint-eslint": "eslint --ignore-path .gitignore src/",
     "lint": "npm run lint-eslint && npm run lint-jscs"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Famous/engine-seed.git"
   },
   "browserify": {
     "transform": [
@@ -33,8 +29,7 @@
     "uglifyify": "^3.0.1",
     "watchify": "^3.1.0"
   },
-  "author": "Famous",
-  "license": "MIT",
+  "author": "morgantheplant",
   "dependencies": {
     "babelify": "^6.0.1",
     "famous": "^0.6.1"
