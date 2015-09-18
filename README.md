@@ -1,7 +1,12 @@
-#Engine-Seed
-> A seed project to get started with the famous engine
+## Phone site
 
-[![Build Status](https://travis-ci.org/Famous/engine-seed.svg?branch=master)](https://travis-ci.org/Famous/engine-seed)  [![Dependency Status](https://david-dm.org/famous/engine-seed.svg)](https://david-dm.org/famous/engine-seed) [![devDependency Status](https://david-dm.org/famous/engine-seed/dev-status.svg)](https://david-dm.org/famous/engine-seed#info=devDependencies)
+iOS UI concept website using JavaScript (Famous), HTML & CSS.
+
+### Deployed: [morgantheplant.com](http://morgantheplant.com)
+
+![screenshots](./screenshots.png)
+
+
 
 ---
 
@@ -26,25 +31,3 @@ Run the linters with ```npm run lint```
 Run All Tests with ```npm test```
 
 ---
-
-###Need help?
-
-Please join us on the "famous-community" slack.
-
-Sign up --> http://slack.famous.org/signup
-
-Join the discussion --> http://slack.famous.org/
-
-There is a bunch of learning material at --> http://famous.org/learn
-
-There are api docs at -->
-http://famous.org/docs
-
-
-Do you think this readme needs work? So do we! Feel free to send a PR!!!
-
----
-
-###LICENSE
-
-MIT
